@@ -1,0 +1,307 @@
+body{
+    width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+* {
+    box-sizing: border-box;
+  }
+  
+.logo {
+    width: auto;
+    height: 50px;
+}
+.nav-link:hover{
+    color: orange;
+    text-decoration: undreline;
+}
+#nav-style{
+    color: rgb(67, 78, 75);
+    font-family: Roboto;
+    font-weight: bold;
+   font-size: 18px;
+   color: aliceblue;
+}
+#home{
+    background: linear-gradient(135deg,#0f2027,#2c5364);
+    height: 100vh;
+    width: 100%;
+    padding-top:80px;
+}
+
+.home-banner{
+    background-color: #ffffff;
+    width: 100%;
+    height: 600px;
+    border-radius: 20px;
+    margin-left: 1px;
+}
+.video-background{
+    background-color: #e26dea;
+    width: 100%;
+    height: 100%;   
+    padding: 10px;
+    position: relative;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    
+}
+.video-background video {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    object-fit: fill;
+}
+.home-title{
+    color:#e667ef;
+    font-weight: bold;
+    text-shadow: 0 2px 8px rgba(44,62,80,0.15);
+    font-family: "playfair display";
+}
+.home-subtitle{
+    color: #34495e;
+    font-weight: 800;
+    font-size: 18px;
+    margin-top: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.btn-success{
+    background-color: #27ae50;
+    border:none;
+    color: #ffffff;
+    font-weight: bold;
+    font-family: "playfair display";
+    width: 80px;
+    height: 36px;
+    font-size: 16px;
+    border-radius: 30px;
+    box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+.btn-success:hover{
+   background: linear-gradient(135deg, #16a085, #145A32);
+   box-shadow: 0 4px 16px rgba(44,62,80,0.12);
+}
+.btn-info{
+    background-color: #2980b9;
+    border:none;
+    color:#ffffff;
+    font-weight: bold;
+    font-family: "playfair display";
+    width: 80px;
+    height: 36px;
+    font-size: 16px;
+    border-radius: 30px;
+}
+.form-group{
+    color: #ffffff;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 4px;
+}
+.form-group input{
+    width: 100%;
+    border-style: solid !important;
+    border-width: 2px !important;
+    margin-bottom: 10px;
+}
+#about{
+    background-color: #0f2027;
+}
+.about-title{
+    font-family: "playfair display", serif;
+    font-size: 40px;
+    font-weight: bold;
+    color: rgb(231, 17, 247);
+    margin-bottom: 3px;
+    margin-top: 0px;
+}
+.about-description{
+    font-family: "Roboto";
+    font-weight: 500;
+    font-size: 20px;
+}
+.about-image{
+    width: 100%;
+}
+.about-subtitle{
+    text-decoration: underline;
+    font-size: 25px;
+    font-weight: 600;
+    font-family: playfair display;
+    margin-top: 0px;
+    color: rgb(35, 210, 29);
+}
+#service{
+    background-color: rgb(239, 247, 246);
+}
+.service-background{
+    background-image:url(https://i.pinimg.com/736x/14/6d/b3/146db3bceb622607a1b5a08efb32a2ab.jpg);
+    width: 100%;
+    background-position: center;
+    height: auto;
+    background-size: cover;
+    padding-bottom:50px;
+    animation: service-card-animation;
+
+}
+.service-description{
+    font-family: "Roboto";
+    font-size: 24px;
+    font-weight: bold ;
+    color: #ffffff;
+}
+.sevice-card {
+    background-color: #e1f3f287;
+    border-radius: 10px;
+    transition: 1s;
+    animation: service-card-Animation 1s ease-in 0s  alternate;
+}
+.sevice-card:hover{
+    background-color: rgb(100, 255, 139);
+    transform: translateY(-10px);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+   
+}
+@keyframes service-card-Animation {
+    0%{
+        opacity: 0.3;
+        transform: translateY(40px);
+        transition: opacity 0.7s ease, transform 1s ease;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+.service-img {
+    border-radius: 10px;
+    width: 100%;
+}
+
+.service-name {
+    color: #154c79;
+    font-family: "Playfair display";
+    font-size: 30px;
+    font-weight: 700;
+    margin-left: 10px;
+    margin-top: 5px;
+    text-decoration:underline ;
+}
+
+.service-descr {
+    margin-left: 10px;
+    color: #21130d;
+    font-family: "Roboto";
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.service-list {
+    color: #21130d;
+    font-weight: 700;
+    font-family: "Roboto";
+}
+.product-image{
+    width: 100%;
+}
+.product-name{
+    color: #c956ff;
+    font-size: 25px;
+}
+.product-price{
+    color: #00000085;
+    font-size: 20px;
+}
+#career{
+    background-color: rgba(255, 255, 255, 0.47);
+}
+.career-background{
+    background-image: url(https://i.pinimg.com/736x/44/ca/62/44ca62f49a6219804914dc9c6061cf2b.jpg);
+    width: 100%;
+    background-position: center;  
+    padding-bottom: 50px;
+    background-size: cover;
+    text-align: center;
+    padding-top: 10px;
+    opacity: 0.9;
+}
+.career-tittle{
+    font-family: "Roboto";
+    font-size: 40px;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+.form-group input{
+    border: 1px solid black !important;
+    border-radius: 4px;
+    box-shadow: inset;
+    background-color:transparent ;
+}
+.form-group label{
+    font-family: "Roboto";
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+}
+.career-subtitle{
+    font-family: "Roboto";
+    font-weight: bold;
+    color: #ed46ff;
+}
+.career-description{
+    font-family: "playfair display";
+    font-weight: 530;
+    color: rgb(0, 0, 0);
+    margin:auto;
+    font-size: 20px;
+}
+.career-opportunity{
+    font-family: "Roboto";
+    font-weight: 500;
+    color: rgb(0, 0, 0);
+    margin:auto;
+    font-size: 20px;
+}
+.testimonial-card {
+    background-color:#efeaf1;
+    border-radius: 10px;
+    padding: 10px;
+
+}
+
+.testimonial-review {
+    color: #000000;
+    font-family: "Roboto";
+    font-weight: 800;
+}
+
+.stars {
+    color: #FFD700;
+    /* Gold color */
+    font-size: 20px;
+}
+
+.reviewer-name {
+    color: #044378;
+    font-size: 20px;
+    margin-left: 65px;
+}
+#contact{
+    background-color:#0f2027;
+}
+.contact-heading{
+    font-family: "Roboto";
+    font-size: 27px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+}
+footer{
+    background-color: rgb(68, 243, 109);
+    text-align: center;
+    padding: 10px;
+}
+.footer-heading{
+    color: black;
+    font-size: 15px;
+    margin: auto;
+}
