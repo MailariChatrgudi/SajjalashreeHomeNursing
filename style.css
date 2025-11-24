@@ -305,3 +305,11 @@ footer{
     font-size: 15px;
     margin: auto;
 }
+.products-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.is-invalid{
+    border-color: #f50f26 !important;
+}

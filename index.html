@@ -97,7 +97,6 @@
         background-color: #e5e2e2f4;
         animation: popupfade 1s ease;
         border-radius: 5px;
-        
     }
     .heading{
         font-size: 25px;
@@ -357,143 +356,250 @@
             <hr style="width: 80px;  border-width: 5px; border-radius: 50px; color:rgb(38, 255, 146); opacity: 20;" class="m-auto mb-4 ">
             <p class="text-center" style="font-size: 20px; font-weight: bold; font-family: 'Times New Roman', Times, serif;">Rent or buy high-quality Products for mobility support.</p>
           </div>
-          <div class="col-12 col-md-6 col-lg-3">
-            <div class="d-flex flex-column justify-content-center align-items-center">
-              <img src="https://productimages.withfloats.com/tile/67650e2d984056d88641b467.jpg" alt="product img" class="product-image">
-              <div class="product-area text-center">
-                <h1 class="product-name" name="product_name">Hospital Cot</h1>
-                <h2 class="product-price">INR 12000</h2>
-                <button type="button" class="btn  btn-outline-success " style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productModal" >Enquiry</button>
-                <!-- Vertically centered modal -->
-                <div class="modal-dialog ">
-                  <!-- Modal -->
-                  <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-                    <div class="modal-dialog text-white modal-dialog-centered">
-                      <div class="modal-content bg-white" style="color:#27ae60;">
-                        <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <p>Hi, I am interested in "HOSPITAL COT" and need more information on the same. Please contact me.</p>
-                          <form id="cot-enquiry" data-product="Hospital Cot"> 
-                            <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" id="productUserName">
-                            <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" id="productUserPhone" required>
+          <div class="products-container">
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="d-flex flex-column justify-content-center align-items-center">
+                <img src="https://productimages.withfloats.com/tile/67650e2d984056d88641b467.jpg" alt="product img" class="product-image">
+                <div class="product-area text-center">
+                  <h1 class="product-name" name="product_name">Hospital Cot</h1>
+                  <h2 class="product-price">INR ₹11999</h2>
+                  <button type="button" class="btn  btn-outline-success " style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productModal" >Enquiry</button>
+                  <!-- Vertically centered modal -->
+                  <div class="modal-dialog ">
+                    <!-- Modal -->
+                    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                      <div class="modal-dialog text-white modal-dialog-centered">
+                        <div class="modal-content bg-white" style="color:#27ae60;">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-            </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-6 col-lg-3">
-            <div class="d-flex flex-column justify-content-center align-items-center m-2">
-              <img src="https://productimages.withfloats.com/tile/6376f177d239f5000103bfd2.jpg" alt="product img" class="product-image" style="width: 100%; height: 250px;">
-              <div class="product-area text-center">
-                <h1 class="product-name" name="product_name">Walking Stick</h1>
-                <h2 class="product-price">INR 800</h2>
-                <button type="button" class="btn  btn-outline-success " style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productwalkingstickModal" >Enquiry</button>
-                <!-- Vertically centered modal -->
-                <div class="modal-dialog ">
-                  <!-- Modal -->
-                  <div class="modal fade" id="productwalkingstickModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-                    <div class="modal-dialog text-white modal-dialog-centered">
-                      <div class="modal-content bg-white" style="color:#27ae60;">
-                        <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                          <p>Hi, I am interested in "Walking Stick" and need more information on the same. Please contact me.</p>
-                          <form id="stick-enquiry" data-product="Walking Stick">
-                            <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" required>
-                            <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" required>
+                          <div class="modal-body">
+                            <p>Hi, I am interested in "HOSPITAL COT" and need more information on the same. Please contact me.</p>
+                            <form id="cot-enquiry" data-product="Hospital Cot"> 
+                              <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" id="productUserName">
+                              <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" id="productUserPhone" required>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
                           </form>
                         </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-success">Submit</button>
-                        </div>
                       </div>
                     </div>
-                  </div>
-            </div>
+              </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-12 col-md-6 col-lg-3">
-            <div class="d-flex flex-column justify-content-center align-items-center m-2">
-              <img src="https://productimages.withfloats.com/tile/6376eb2b477fa1000152ff73.jpg" alt="product img" class="product-image">
-              <div class="product-area text-center">
-                <h1 class="product-name" name="product_name">Walker</h1>
-                <h2 class="product-price">INR 1800</h2>
-                <button type="button" class="btn  btn-outline-success " style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productwalkerModal" >Enquiry</button>
-                <!-- Vertically centered modal -->
-                <div class="modal-dialog ">
-                  <!-- Modal -->
-                  <div class="modal fade" id="productwalkerModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-                    <div class="modal-dialog text-white modal-dialog-centered">
-                      <div class="modal-content bg-white" style="color:#27ae60;">
-                        <div class="modal-header  " style="color:#27ae60;">
-                          <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="d-flex flex-column justify-content-center align-items-center m-2">
+                <img src="https://productimages.withfloats.com/tile/6376f177d239f5000103bfd2.jpg" alt="product img" class="product-image" style="width: 100%; height: 250px;">
+                <div class="product-area text-center">
+                  <h1 class="product-name mt-5" name="product_name">Walking Stick</h1>
+                  <h2 class="product-price">INR ₹799</h2>
+                  <button type="button" class="btn  btn-outline-success " style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productwalkingstickModal" >Enquiry</button>
+                  <!-- Vertically centered modal -->
+                  <div class="modal-dialog ">
+                    <!-- Modal -->
+                    <div class="modal fade" id="productwalkingstickModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                      <div class="modal-dialog text-white modal-dialog-centered">
+                        <div class="modal-content bg-white" style="color:#27ae60;">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Hi, I am interested in "Walking Stick" and need more information on the same. Please contact me.</p>
+                            <form id="stick-enquiry" data-product="Walking Stick">
+                              <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" required>
+                              <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" required>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                            </form>
+                          </div>
                         </div>
-                        <div class="modal-body">
-                          <p>Hi, I am interested in "Walker" and need more information on the same. Please contact me.</p>
-                          <form id="walker-enquiry" data-product="Walker">
-                            <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" required>
-                            <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" required>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
-                          </div>
-                        </form>
-                      </div>
                     </div>
-                  </div>
-            </div>
+              </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="col-12 col-md-6 col-lg-3">
-            <div class="d-flex flex-column justify-content-center align-items-center m-2">
-              <img src="https://productimages.withfloats.com/tile/6375debdb7678f00018dbadc.jpg" alt="product img" class="product-image">
-              <div class="product-area text-center">
-                <h1 class="product-name" name="product_name">Wheel Chair</h1>
-                <h2 class="product-price">INR 5900</h2>
-                <button type="button" class="btn  btn-outline-success" style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productwheelchairModal" >Enquiry</button>
-                <!-- Vertically centered modal -->
-                <div class="modal-dialog ">
-                  <!-- Modal -->
-                  <div class="modal fade" id="productwheelchairModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
-                    <div class="modal-dialog text-white modal-dialog-centered">
-                      <div class="modal-content bg-white" style="color:#27ae60;">
-                        <div class="modal-header">
-                          <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="d-flex flex-column justify-content-center align-items-center m-2">
+                <img src="Images\Walker.jpg" alt="product img" class="product-image">
+                <div class="product-area text-center">
+                  <h1 class="product-name" name="product_name">Walker</h1>
+                  <h2 class="product-price">INR ₹1799</h2>
+                  <button type="button" class="btn  btn-outline-success " style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productwalkerModal" >Enquiry</button>
+                  <!-- Vertically centered modal -->
+                  <div class="modal-dialog ">
+                    <!-- Modal -->
+                    <div class="modal fade" id="productwalkerModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                      <div class="modal-dialog text-white modal-dialog-centered">
+                        <div class="modal-content bg-white" style="color:#27ae60;">
+                          <div class="modal-header  " style="color:#27ae60;">
+                            <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Hi, I am interested in "Walker" and need more information on the same. Please contact me.</p>
+                            <form id="walker-enquiry" data-product="Walker">
+                              <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" required>
+                              <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" required>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                          </form>
                         </div>
-                        <div class="modal-body">
-                          <p>Hi, I am interested in "Wheel Chair" and need more information on the same. Please contact me.</p>
-                          <form id="wheelchiar-enquiry" data-product="Wheelchair">
-                            <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" required>
-                            <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" required>
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
-                          </div>
-                        </form>
                       </div>
                     </div>
-                  </div>
+              </div>
+                </div>
+              </div>
             </div>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="d-flex flex-column justify-content-center align-items-center m-2">
+                <img src="Images\WheelChair.jpg" alt="product img" class="product-image">
+                <div class="product-area text-center">
+                  <h1 class="product-name" name="product_name">Wheel Chair</h1>
+                  <h2 class="product-price">INR ₹5899</h2>
+                  <button type="button" class="btn  btn-outline-success" style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productwheelchairModal" >Enquiry</button>
+                  <!-- Vertically centered modal -->
+                  <div class="modal-dialog ">
+                    <!-- Modal -->
+                    <div class="modal fade" id="productwheelchairModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                      <div class="modal-dialog text-white modal-dialog-centered">
+                        <div class="modal-content bg-white" style="color:#27ae60;">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Hi, I am interested in "Wheel Chair" and need more information on the same. Please contact me.</p>
+                            <form id="wheelchiar-enquiry" data-product="Wheelchair">
+                              <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" required>
+                              <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" required>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="d-flex flex-column justify-content-center align-items-center m-2">
+                <img src="Images\Omron.jpg" alt="product img" class="product-image">
+                <div class="product-area text-center">
+                  <h1 class="product-name" name="product_name">Omron BP Monitor</h1>
+                  <h2 class="product-price">INR ₹1699</h2>
+                  <button type="button" class="btn  btn-outline-success" style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productomronModal" >Enquiry</button>
+                  <!-- Vertically centered modal -->
+                  <div class="modal-dialog ">
+                    <!-- Modal -->
+                    <div class="modal fade" id="productomronModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                      <div class="modal-dialog text-white modal-dialog-centered">
+                        <div class="modal-content bg-white" style="color:#27ae60;">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Hi, I am interested in "Omron BP Monitor" and need more information on the same. Please contact me.</p>
+                            <form id="Omron-enquiry" data-product="Omron BP Monitor">
+                              <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" required>
+                              <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" required>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="d-flex flex-column justify-content-center align-items-center m-2">
+                <img src="Images\AdultDiaper.jpg" alt="product img" class="product-image">
+                <div class="product-area text-center">
+                  <h1 class="product-name" name="product_name">Adult Diaper</h1>
+                  <h2 class="product-price">INR ₹239</h2>
+                  <button type="button" class="btn  btn-outline-success" style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productAdultdaiperModal" >Enquiry</button>
+                  <!-- Vertically centered modal -->
+                  <div class="modal-dialog ">
+                    <!-- Modal -->
+                    <div class="modal fade" id="productAdultdaiperModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                      <div class="modal-dialog text-white modal-dialog-centered">
+                        <div class="modal-content bg-white" style="color:#27ae60;">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Hi, I am interested in "everactive Adult Diaper" and need more information on the same. Please contact me.</p>
+                            <form id="Adult-diaper-enquiry" data-product="adult-Diaper">
+                              <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" required>
+                              <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" required>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+              <div class="d-flex flex-column justify-content-center align-items-center m-2">
+                <img src="Images\Acc-check.jpg" alt="product img" class="product-image">
+                <div class="product-area text-center">
+                  <h1 class="product-name" name="product_name">Accu-Check Active</h1>
+                  <h2 class="product-price">INR ₹1799</h2>
+                  <button type="button" class="btn  btn-outline-success" style="border-width:2px; font-weight: bold;" data-bs-toggle="modal" data-bs-target="#productAccuCheckModal" >Enquiry</button>
+                  <!-- Vertically centered modal -->
+                  <div class="modal-dialog ">
+                    <!-- Modal -->
+                    <div class="modal fade" id="productAccuCheckModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+                      <div class="modal-dialog text-white modal-dialog-centered">
+                        <div class="modal-content bg-white" style="color:#27ae60;">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="productModalLabel">Questions? We'll be glad to answer them.</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>Hi, I am interested in "Accu-Check" and need more information on the same. Please contact me.</p>
+                            <form id="Accu-check-enquiry" data-product="Accu-check">
+                              <input type="text" class="form-control mb-3" name="from_name" placeholder="Name" aria-label="Name" required>
+                              <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number" aria-label="Phone Number" required>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+              </div>
+                </div>
               </div>
             </div>
           </div>
@@ -736,20 +842,29 @@
     </footer>
   </main> 
   <div class="pop-overlay" id="enquiryPopup">  
-    <div class="pop-up-content" >
-          <span class="close-btn" onclick="closePopup()" style="margin-left: auto;cursor: pointer; font-size: 30px;">&times;</span>
+    <div id="popupContent" class="pop-up-content">
+
+          <span class="close-btn " onclick="closePopup()" style="margin-left: auto;cursor: pointer; font-size: 30px;">&times;</span>
           <h1 class="heading">Looking for something specific?<br>
                   <span style="color: green;">We’re just a call away.</span></h1>
 
           <p style="color: rgba(39, 44, 48, 0.904);">Share your number to get Call Back.</p>   
           <form style="display: flex;" >
-              <input type="text" placeholder="Enter your number" name="phone" style="padding: 10px; border-radius: 3px; border: 1px solid rgb(33, 32, 32); width: 100%; height: 40px; margin-top: 5px;" class="input-field">
-              <button type="submit" style=" background-color: green; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 5px; margin-left: 2px; height: 40px; width: 150px; font-size: 15px;">Call me back</button> 
+              <input type="text" placeholder="Enter your number" name="phone" style="padding: 10px; border-radius: 3px; border: 1px solid rgb(33, 32, 32); width: 100%; height: 40px; margin-top: 5px;" class="input-field" id="mobileNo" required>
+              <button type="submit" style=" background-color: green; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 5px; margin-left: 2px; height: 40px; width: 150px; font-size: 15px;" id="callBtn">Call me back</button> 
           </form>    
           <p style="font-size: 12px; color: gray; margin-top: 5px;">Rest assured, your details are secure with us</p>
           <p>In hurry? <a href="tel:+919916172366" style="color: green; text-decoration: none;">Call us now <span style="color: green;text-decoration: underline;">+919916172366</span></a></p>
+        </div>
+      <div id="loader" class="pop-up-content w-50 h-50 m-auto d-none">
+      <div class="d-flex justify-content-center m-auto ">
+        <div class="spinner-border text-success" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
       </div>
+</div>
     </div> 
+   
   <script src="script.js"></script>
 </body>
 </html>
