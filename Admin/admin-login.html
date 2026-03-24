@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Nursing Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="admin-auth.css">
+</head>
+
+<body>
+    <div class="auth-container">
+        <!-- 1. LOGIN VIEW -->
+        <div class="auth-box login-box view-section" id="loginView">
+            <div class="auth-header">
+                <div class="logo-circle">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h1>Admin Login</h1>
+                <p>Sign in to your admin account</p>
+            </div>
+
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    </div>
+                    <span class="error-message" id="usernameError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                            <i class="fas fa-eye" style="margin-right: 20px;"></i>
+                        </button>
+                    </div>
+                    <span class="error-message" id="passwordError"></span>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-link" onclick="switchView('forgotPasswordView')">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large">
+                    <span>Sign In</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Only registered admins can access this portal</p>
+            </div>
+        </div>
+
+        <!-- 2. FORGOT PASSWORD VIEW -->
+        <div class="auth-box login-box view-section hidden" id="forgotPasswordView" style="display: none;">
+            <div class="auth-header">
+                <div class="logo-circle" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h1>Reset Password</h1>
+                <p>Enter your username or email to receive an OTP</p>
+            </div>
+
+            <form class="auth-form" id="forgotPasswordForm">
+                <div class="form-group">
+                    <label for="resetUsername">Username or Email</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="resetUsername" placeholder="Enter your username or email" required>
+                    </div>
+                    <span class="error-message" id="resetUsernameError"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large"
+                    style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <span>Send Reset Code</span>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p><a href="#" class="link-primary" onclick="switchView('loginView')">← Back to Login</a></p>
+            </div>
+        </div>
+
+        <!-- 3. OTP VERIFICATION VIEW -->
+        <div class="auth-box login-box view-section hidden" id="otpView" style="display: none;">
+            <div class="auth-header">
+                <div class="logo-circle" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <i class="fas fa-key"></i>
+                </div>
+                <h1>Verify OTP</h1>
+                <p>Enter the 6-digit code sent to your email</p>
+            </div>
+
+            <form class="auth-form" id="otpForm">
+                <div class="form-group">
+                    <label for="resetOtp">6-Digit Code</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-hashtag"></i>
+                        <input type="text" id="resetOtp" placeholder="123456" maxlength="6" required
+                            style="font-size: 20px; letter-spacing: 4px; font-weight: bold; text-align: center; padding-left: 12px;">
+                    </div>
+                    <span class="error-message" id="resetOtpError"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large"
+                    style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <span>Verify Code</span>
+                    <i class="fas fa-check"></i>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p><a href="#" class="link-primary" onclick="switchView('forgotPasswordView')">← Try another
+                        username</a></p>
+            </div>
+        </div>
+
+        <!-- 4. SET NEW PASSWORD VIEW -->
+        <div class="auth-box login-box view-section hidden" id="resetPasswordView" style="display: none;">
+            <div class="auth-header">
+                <div class="logo-circle" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <i class="fas fa-lock-open"></i>
+                </div>
+                <h1>New Password</h1>
+                <p>Create a strong password for your account</p>
+            </div>
+
+            <form class="auth-form" id="resetPasswordForm">
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="newPassword" placeholder="Enter new password"
+                            onkeyup="checkPasswordStrength(event)" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('newPassword')">
+                            <i class="fas fa-eye" style="margin-right: 20px;"></i>
+                        </button>
+                    </div>
+                    <span class="error-message" id="newPasswordError"></span>
+                    <div class="password-strength" style="margin-top: 8px;">
+                        <div class="strength-bar" id="strengthBar"></div>
+                        <div class="strength-text" id="strengthText"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmNewPassword">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-check-circle"></i>
+                        <input type="password" id="confirmNewPassword" placeholder="Confirm new password" required>
+                    </div>
+                    <span class="error-message" id="confirmNewPasswordError"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large"
+                    style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+                    <span>Update Password</span>
+                    <i class="fas fa-save"></i>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p><a href="#" class="link-primary" onclick="switchView('loginView')">Cancel</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-auth.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', handleLoginSubmit);
+        document.getElementById('forgotPasswordForm').addEventListener('submit', handleForgotPasswordSubmit);
+        document.getElementById('otpForm').addEventListener('submit', handleOtpSubmit);
+        document.getElementById('resetPasswordForm').addEventListener('submit', handleResetPasswordSubmit);
+    </script>
+</body>
+
+</html>

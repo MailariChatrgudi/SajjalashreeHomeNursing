@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#13152a" />
+    <meta name="description" content="CareerAdmin — Career Application Management System" />
+    <title>CareerAdmin — Application Management</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous" />
+
+
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="admin.css" />
+</head>
+
+<body>
+
+    <!-- ═══════════════════════════════════════════════
+     SIDEBAR OVERLAY (mobile tap-to-close)
+═══════════════════════════════════════════════ -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- ═══════════════════════════════════════════════
+     SIDEBAR  (desktop: always visible / mobile: drawer)
+═══════════════════════════════════════════════ -->
+    <aside class="sidebar" id="sidebar" role="navigation" aria-label="Admin sidebar">
+
+        <div class="sidebar-brand">
+            <div class="brand-logo"><i class="fa-solid fa-briefcase"></i></div>
+            <div class="brand-text">
+                <span class="brand-name">CareerAdmin</span>
+                <span class="brand-sub">Application Management</span>
+            </div>
+        </div>
+
+        <div class="admin-profile">
+            <div class="avatar-wrap">
+                <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1742205705/slcopy-removebg-preview_l4hybk.png"
+                    alt="Admin User" class="admin-avatar-img" />
+                <span class="online-dot" title="Online"></span>
+            </div>
+            <div class="admin-details">
+                <p class="admin-name" id="adminName"></p>
+                <p class="admin-role" id="adminRole"><i class="fa-solid fa-shield-halved"></i> </p>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <p class="nav-section-label">MAIN MENU</p>
+
+
+
+
+            <a href="#" class="nav-link active" id="navApplications"
+                onclick="switchSection('applications', this); return false;" aria-current="page">
+                <span class="nav-icon"><i class="fa-solid fa-file-lines"></i></span>
+                <span class="nav-label">Applications</span>
+                <span class="nav-badge" id="navBadge">0</span>
+            </a>
+            <a href="#" class="nav-link" id="navGeneralEnquiries"
+                onclick="switchSection('generalEnquiries', this); return false;">
+                <span class="nav-icon"><i class="fa-solid fa-envelope"></i></span>
+                <span class="nav-label">General Enquiries</span>
+            </a>
+            <a href="#" class="nav-link" id="navProductEnquiries"
+                onclick="switchSection('productEnquiries', this); return false;">
+                <span class="nav-icon"><i class="fa-solid fa-box"></i></span>
+                <span class="nav-label">Product Enquiries</span>
+            </a>
+
+            <p class="nav-section-label" style="margin-top:16px;">ADMIN MANAGEMENT</p>
+
+            <a href="admin-add-user.html" class="nav-link" id="navAddAdmin">
+                <span class="nav-icon"><i class="fa-solid fa-user-plus"></i></span>
+                <span class="nav-label">Add New Admin</span>
+            </a>
+
+            <p class="nav-section-label" style="margin-top:16px;">ACCOUNT</p>
+
+            <a href="#" class="nav-link nav-logout" onclick="handleLogout(); return false;">
+                <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+                <span class="nav-label">Logout</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-footer">
+            <p class="footer-version">v2.0.0 &nbsp;·&nbsp; CareerAdmin</p>
+        </div>
+
+    </aside>
+
+    <!-- ═══════════════════════════════════════════════
+     BOTTOM NAV (mobile only — <1024px)
+═══════════════════════════════════════════════ -->
+    <nav class="bottom-nav" id="bottomNav" aria-label="Mobile navigation">
+        <button class="bottom-nav-btn active" id="bnApplications"
+            onclick="switchSection('applications', document.getElementById('navApplications'))">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Applications</span>
+        </button>
+        <button class="bottom-nav-btn" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+            <span>Menu</span>
+        </button>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════ -->
+    <div class="main-content" id="mainContent">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="topbar-breadcrumb">
+                    <span class="breadcrumb-section" id="breadcrumbSection">Dashboard</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-date">
+                    <i class="fa-regular fa-calendar-days"></i>
+                    <span id="currentDate"></span>
+                </div>
+                <button class="icon-btn" onclick="refreshCurrentSection()" title="Refresh" id="refreshBtn">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+            </div>
+        </header>
+
+
+
+        <!-- ════════════════════════════
+       APPLICATIONS SECTION
+  ════════════════════════════ -->
+        <!-- GENERAL ENQUIRIES SECTION -->
+        <section class="page-section hidden" id="sectionGeneralEnquiries">
+            <div class="section-intro">
+                <h1 class="section-title">General Enquiries</h1>
+                <p class="section-sub">All general (contact) enquiries submitted from the website</p>
+            </div>
+
+            <div class="table-toolbar">
+                <div class="toolbar-left">
+                    <div class="filter-select-wrap">
+                        <i class="fa-solid fa-filter filter-icon"></i>
+                        <select id="generalStatusFilter" onchange="loadGeneralEnquiries()"
+                            aria-label="Filter general enquiries by status">
+                            <option value="">All</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Contacted">Contacted</option>
+                        </select>
+                    </div>
+                    <div class="filter-select-wrap">
+                        <i class="fa-solid fa-calendar-days filter-icon"></i>
+                        <input type="month" id="generalDateFilter" onchange="loadGeneralEnquiries()"
+                            aria-label="Filter general enquiries by month and year" class="date-input"
+                            style="border: none; background: transparent; color: inherit; font: inherit; outline: none;" />
+                    </div>
+                </div>
+                <div class="toolbar-right">
+                    <span class="result-count" id="generalResultCount" aria-live="polite">Loading…</span>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="state-box" id="generalEnquiriesLoading">
+                    <div class="loader-ring"></div>
+                    <p class="state-title">Loading enquiries…</p>
+                </div>
+                <div class="state-box hidden" id="generalEnquiriesEmpty">
+                    <i class="fa-solid fa-folder-open state-icon"></i>
+                    <p class="state-title">No general enquiries found</p>
+                </div>
+                <div class="state-box hidden" id="generalEnquiriesError">
+                    <i class="fa-solid fa-triangle-exclamation state-icon state-icon-err"></i>
+                    <p class="state-title">Could not load data</p>
+                </div>
+                <div class="table-wrap hidden" id="generalEnquiriesTableWrap">
+                    <table class="app-table" id="generalEnquiriesTable" role="grid">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="generalEnquiriesBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCT ENQUIRIES SECTION -->
+        <section class="page-section hidden" id="sectionProductEnquiries">
+            <div class="section-intro">
+                <h1 class="section-title">Product Enquiries</h1>
+                <p class="section-sub">All product-specific enquiries submitted from the website</p>
+            </div>
+
+            <div class="table-toolbar">
+                <div class="toolbar-left">
+                    <div class="filter-select-wrap">
+                        <i class="fa-solid fa-filter filter-icon"></i>
+                        <select id="productStatusFilter" onchange="loadProductEnquiries()"
+                            aria-label="Filter product enquiries by status">
+                            <option value="">All</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Contacted">Contacted</option>
+                        </select>
+                    </div>
+                    <div class="filter-select-wrap">
+                        <i class="fa-solid fa-calendar-days filter-icon"></i>
+                        <input type="month" id="productDateFilter" onchange="loadProductEnquiries()"
+                            aria-label="Filter product enquiries by month and year" class="date-input"
+                            style="border: none; background: transparent; color: inherit; font: inherit; outline: none;" />
+                    </div>
+                </div>
+                <div class="toolbar-right">
+                    <span class="result-count" id="productResultCount" aria-live="polite">Loading…</span>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="state-box" id="productEnquiriesLoading">
+                    <div class="loader-ring"></div>
+                    <p class="state-title">Loading product enquiries…</p>
+                </div>
+                <div class="state-box hidden" id="productEnquiriesEmpty">
+                    <i class="fa-solid fa-folder-open state-icon"></i>
+                    <p class="state-title">No product enquiries found</p>
+                </div>
+                <div class="state-box hidden" id="productEnquiriesError">
+                    <i class="fa-solid fa-triangle-exclamation state-icon state-icon-err"></i>
+                    <p class="state-title">Could not load data</p>
+                </div>
+                <div class="table-wrap hidden" id="productEnquiriesTableWrap">
+                    <table class="app-table" id="productEnquiriesTable" role="grid">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Product</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productEnquiriesBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="page-section" id="sectionApplications">
+            <div class="section-intro">
+                <h1 class="section-title">All Applications</h1>
+                <p class="section-sub">Manage and review every submitted application</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-row">
+                <div class="stat-card stat-total">
+                    <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="statTotal">0</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-pending">
+                    <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="statPending">0</span>
+                        <span class="stat-label">Pending</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-shortlisted">
+                    <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="statShortlisted">0</span>
+                        <span class="stat-label">Shortlisted</span>
+                    </div>
+                </div>
+                <div class="stat-card stat-rejected">
+                    <div class="stat-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+                    <div class="stat-info">
+                        <span class="stat-value" id="statRejected">0</span>
+                        <span class="stat-label">Rejected</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="table-toolbar">
+                <div class="toolbar-left">
+                    <div class="search-box">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="search" id="searchInput" placeholder="Search name, phone or email…"
+                            oninput="filterApplications()" autocomplete="off" enterkeyhint="search" />
+                        <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="Clear search">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    <div class="filter-select-wrap">
+                        <i class="fa-solid fa-filter filter-icon"></i>
+                        <select id="statusFilter" onchange="filterApplications()" aria-label="Filter by status">
+                            <option value="">All Statuses</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Shortlisted">Shortlisted</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="filter-select-wrap">
+                        <i class="fa-solid fa-briefcase filter-icon"></i>
+                        <select id="experienceFilter" onchange="filterApplications()" aria-label="Filter by experience">
+                            <option value="">All Experience</option>
+                            <option value="0-2">0-2 Years</option>
+                            <option value="2-5">2-5 Years</option>
+                            <option value="5-10">5-10 Years</option>
+                            <option value="10+">10+ Years</option>
+                        </select>
+                    </div>
+                    <div class="filter-select-wrap">
+                        <i class="fa-solid fa-calendar-days filter-icon"></i>
+                        <input type="month" id="dateFilter" onchange="filterApplications()"
+                            aria-label="Filter by month and year" class="date-input"
+                            style="border: none; background: transparent; color: inherit; font: inherit; outline: none;" />
+                    </div>
+                </div>
+                <div class="toolbar-right">
+                    <span class="result-count" id="resultCount" aria-live="polite">Loading…</span>
+                </div>
+            </div>
+
+            <!-- Table Card -->
+            <div class="table-card" id="tableCard">
+
+                <div class="state-box" id="tableLoading">
+                    <div class="loader-ring"></div>
+                    <p class="state-title">Loading applications…</p>
+                </div>
+
+                <div class="state-box hidden" id="tableEmpty">
+                    <i class="fa-solid fa-folder-open state-icon"></i>
+                    <p class="state-title">No applications found</p>
+                    <span class="state-sub">Adjust your search or filter</span>
+                </div>
+
+                <div class="state-box hidden" id="tableError">
+                    <i class="fa-solid fa-triangle-exclamation state-icon state-icon-err"></i>
+                    <p class="state-title">Could not load data</p>
+                    <span class="state-sub">Showing demo data</span>
+                    <button class="btn btn-sm btn-primary" onclick="loadApplications()" style="margin-top:12px;">
+                        <i class="fa-solid fa-rotate-right"></i> Retry
+                    </button>
+                </div>
+
+                <div class="table-wrap hidden" id="tableWrap">
+                    <!--
+          data-label attributes on <td> are used by the CSS mobile
+          card-table to render pseudo-element labels on small screens.
+        -->
+                    <table class="app-table" id="appTable" role="grid">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Applicant</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Exp.</th>
+                                <th scope="col">Photo</th>
+                                <th scope="col">Aadhaar</th>
+                                <th scope="col">Certificate</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Rows injected by admin.js -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </section>
+
+    </div><!-- /main-content -->
+
+
+    <!-- ═══════════════════════════════════════════════
+     MODAL — APPLICANT DETAIL
+═══════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="viewModal" role="dialog" aria-modal="true" aria-labelledby="viewModalTitle"
+        onclick="closeModal('viewModal')">
+        <div class="modal-panel modal-lg" onclick="event.stopPropagation()">
+            <div class="modal-head">
+                <h2 class="modal-title" id="viewModalTitle">
+                    <i class="fa-solid fa-id-card"></i> Applicant Details
+                </h2>
+                <button class="modal-close" onclick="closeModal('viewModal')" aria-label="Close modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="viewModalBody"><!-- injected --></div>
+        </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════
+     MODAL — PDF VIEWER
+═══════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="pdfModal" role="dialog" aria-modal="true" aria-labelledby="pdfModalTitle"
+        onclick="closeModal('pdfModal')">
+        <div class="modal-panel modal-pdf" onclick="event.stopPropagation()">
+            <div class="modal-head">
+                <h2 class="modal-title" id="pdfModalTitle">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    <span id="pdfModalLabel">Document Viewer</span>
+                </h2>
+                <div class="modal-head-actions">
+                    <a class="btn btn-sm btn-outline" id="pdfDownloadBtn" href="#" download target="_blank"
+                        rel="noopener">
+                        <i class="fa-solid fa-download"></i> Download
+                    </a>
+                    <button class="modal-close" onclick="closeModal('pdfModal')" aria-label="Close modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="pdf-viewer-wrap">
+                <iframe id="pdfFrame" title="PDF Viewer" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════
+     MODAL — IMAGE PREVIEW
+═══════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="imgModal" role="dialog" aria-modal="true" onclick="closeModal('imgModal')">
+        <div class="modal-panel modal-img" onclick="event.stopPropagation()">
+            <button class="modal-close modal-close-abs" onclick="closeModal('imgModal')" aria-label="Close preview">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="imgPreviewSrc" src="" alt="Preview" class="img-preview-full" />
+            <p class="img-preview-caption" id="imgPreviewCaption"></p>
+        </div>
+    </div>
+        
+
+    <!-- ═══════════════════════════════════════════════
+     MODAL — DELETE CONFIRM
+═══════════════════════════════════════════════ -->
+    <div class="modal-overlay" id="deleteModal" role="dialog" aria-modal="true" onclick="closeModal('deleteModal')">
+        <div class="modal-panel modal-sm" onclick="event.stopPropagation()">
+            <div class="modal-head">
+                <h2 class="modal-title modal-title-danger">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Confirm Delete
+                </h2>
+                <button class="modal-close" onclick="closeModal('deleteModal')" aria-label="Close modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="text-align:center; padding-top:6px;">
+                <div class="delete-illustration"><i class="fa-solid fa-trash-can"></i></div>
+                <p class="delete-msg">This will permanently delete the application. This action cannot be undone.</p>
+            </div>
+            <div class="modal-foot">
+                <button class="btn btn-outline" onclick="closeModal('deleteModal')">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="fa-solid fa-trash-can"></i> Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- TOAST -->
+    <div class="toast-wrap" id="toast" role="status" aria-live="polite">
+        <span class="toast-icon" id="toastIcon"><i class="fa-solid fa-circle-check"></i></span>
+        <span class="toast-msg" id="toastMsg">Action completed</span>
+    </div>
+
+    <script src="admin-auth.js"></script>
+    <script>
+        // Check if user is authenticated before loading page
+
+        if (!isUserAuthenticated()) {
+            alert('Your session has expired. Please login again.');
+            window.location.href = 'admin-login.html';
+        }
+
+        // Check authentication every 5 minutes
+        setInterval(() => {
+            if (!isUserAuthenticated()) {
+                clearUserSession();
+                window.location.href = 'admin-login.html';
+            }
+        }, 24 * 60 * 60 * 1000);
+    </script>
+    <script src="admin.js"></script>
+</body>
+
+</html>

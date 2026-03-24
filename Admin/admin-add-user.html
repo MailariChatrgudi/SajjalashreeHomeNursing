@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Admin - Nursing Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="admin-auth.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-box register-box">
+            <!-- Header -->
+            <div class="auth-header">
+                <div class="logo-circle register">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h1>Add New Admin</h1>
+                <p>Create a new admin account (Admin Only)</p>
+            </div>
+
+            <!-- Form -->
+            <form class="auth-form" id="addUserForm">
+                <!-- Full Name Field -->
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input 
+                            type="text" 
+                            id="fullname" 
+                            name="fullname" 
+                            placeholder="Enter full name"
+                            required
+                        >
+                    </div>
+                    <span class="error-message" id="fullnameError"></span>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope"></i>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="Enter email"
+                            required
+                        >
+                    </div>
+                    <span class="error-message" id="emailError"></span>
+                </div>
+
+                <!-- Username Field -->
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-at"></i>
+                        <input 
+                            type="text" 
+                            id="username" 
+                            name="username" 
+                            placeholder="Choose a username"
+                            required
+                        >
+                    </div>
+                    <span class="error-message" id="usernameError"></span>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Create a strong password"
+                            required
+                        >
+                        <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="error-message" id="passwordError"></span>
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                        <span class="strength-text" id="strengthText"></span>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword" 
+                            placeholder="Confirm password"
+                            required
+                        >
+                        <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="error-message" id="confirmPasswordError"></span>
+                </div>
+
+                <!-- Role Selection -->
+                <div class="form-group">
+                    <label for="role">Admin Role</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-briefcase"></i>
+                        <select 
+                            id="role" 
+                            name="role" 
+                            required
+                            style="
+                                width: 100%;
+                                padding: 12px 16px 12px 40px;
+                                border: 1px solid var(--border);
+                                border-radius: var(--radius-md);
+                                background: var(--input-bg);
+                                font-family: inherit;
+                                font-size: 14px;
+                                color: var(--text-dark);
+                                appearance: none;
+                                cursor: pointer;
+                            "
+                        >
+                            <option value="">Select a role</option>
+                            <option value="super_admin">Super Admin</option>
+                            <option value="admin">Admin</option>
+                            <option value="moderator">Moderator</option>
+                        </select>
+                    </div>
+                    <span class="error-message" id="roleError"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary btn-large">
+                    <span>Create Admin Account</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <!-- Footer -->
+            <div class="auth-footer">
+                <p>
+                    <a href="dashboard.html" class="link-primary">← Back to Dashboard</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin-auth.js"></script>
+    <script>
+        // Check if user is authenticated (Admin Only)
+        if (!isUserAuthenticated()) {
+            alert('You must be logged in as an admin to access this page.');
+            window.location.href = 'admin-login.html';
+        }
+
+        const passwordInput = document.getElementById('password');
+        const strengthBar = document.getElementById('strengthBar');
+        const strengthText = document.getElementById('strengthText');
+
+        passwordInput.addEventListener('input', checkPasswordStrength);
+        document.getElementById('addUserForm').addEventListener('submit', handleAddUserSubmit);
+    </script>
+</body>
+</html>

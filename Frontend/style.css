@@ -26,43 +26,81 @@ body{
     background: linear-gradient(135deg,#0f2027,#2c5364);
     height: 100vh;
     width: 100%;
-    padding-top:80px;
-}
+    padding-top:50px;
+    justify-content: center;
+    align-items: center;
 
+}
 .home-banner{
     background-color: #ffffff;
-    width: 100%;
-    height: 600px;
+    max-width: 100vw;
+    min-height: 70vh;
     border-radius: 20px;
     margin-left: 1px;
-}
-.video-background{
-    background-color: #e26dea;
-    width: 100%;
-    height: 100%;   
-    padding: 10px;
-    position: relative;
-    border-radius: 20px;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    
+    padding: 20px;    
+    align-self: center;
 }
-.video-background video {
+/* .video-background{
     width: 100%;
-    height: 100%;
+    max-height: 500px;
+    background-color: #ed46ff;
+    position: relative;
+    object-fit: cover;
+   
     border-radius: 20px;
-    object-fit: fill;
+} */
+ .video{
+    width: 100%;
+    height: 50vh;
+    border-radius: 20px;
+    object-fit: cover;
+    border-radius: 20px;
+}  
+
+ @media (min-width:768px){
+    .video{
+        width: 50vw;
+        max-height: 50vh;
+        object-fit: fill;
+        border-radius: 20px;
+    }
+}
+@media (min-width:480px) and (max-width: 997px) {
+    .home-banner {
+        width: 100%;
+        padding: 10px;
+        gap: 10px;
+    }
+    .video {
+        width: 100%;
+        max-height: 300px;
+    }
+}
+@media (max-width: 480px) {
+    .home-banner {
+        width: 100%;
+        padding: 10px;
+        gap: 10px;
+    }
+    .video {
+        width: 100%;
+        max-height: 200px;
+    }
 }
 .home-title{
-    color:#e667ef;
+    color:#ec00fd;
     font-weight: bold;
     text-shadow: 0 2px 8px rgba(44,62,80,0.15);
-    font-family: "playfair display";
+    font-family: '  ';
 }
 .home-subtitle{
     color: #34495e;
     font-weight: 800;
-    font-size: 18px;
+    font-size: 20px;
     margin-top: 10px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -236,6 +274,7 @@ body{
     border: 1px solid black !important;
     border-radius: 4px;
     box-shadow: inset;
+    width: 100%;
     background-color:transparent ;
 }
 .form-group label{
