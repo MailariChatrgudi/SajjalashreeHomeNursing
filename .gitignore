@@ -1,7 +1,11 @@
 # Dependencies
 node_modules/
+Backend/node_modules/
 
 # Environment Variables
 .env
 Backend/.env
-.env
+
+# Public Directories
+public/
+Backend/public/
