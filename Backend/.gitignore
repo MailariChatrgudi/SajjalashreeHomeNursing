@@ -1,0 +1,9 @@
+node_modules/
+.env
+public/uploads/photos/*
+public/uploads/aadhar/*
+public/uploads/certificate/*
+!public/uploads/photos/.gitkeep
+!public/uploads/aadhar/.gitkeep
+!public/uploads/certificate/.gitkeep
+backup.sql

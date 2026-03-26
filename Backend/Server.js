@@ -37,6 +37,7 @@ function verifyAdmin(req, res, next) {
 // Protected file access (no public uploads exposure)
 const UPLOADS_ROOT = path.resolve(__dirname, 'public', 'uploads');
 const ALLOWED_UPLOAD_FOLDERS = new Set(['photos', 'aadhar', 'certificate']);
+const cloudinary = require('cloudinary').v2;
 
 app.get('/admin/file/:folder/:filename', verifyAdmin, async (req, res, next) => {
     try {
@@ -46,26 +47,95 @@ app.get('/admin/file/:folder/:filename', verifyAdmin, async (req, res, next) => 
             return res.status(400).json({ success: false, message: 'Invalid folder' })
         }
 
-        // Block traversal attempts like ../../secret or nested paths
-        if (!filename || filename !== path.basename(filename) || filename.includes('..')) {
-            return res.status(400).json({ success: false, message: 'Invalid filename' })
+        if (!filename || filename.includes('..')) {
+            return res.status(400).json({ success: false, message: 'Invalid filename' });
         }
 
+        // Reconstruct the Cloudinary public_id
+        let fieldname = folder;
+        if (folder === 'photos') fieldname = 'photo';
+
+        const ext = path.extname(filename).toLowerCase();
+        const format = ext ? ext.replace('.', '') : '';
+        const baseFilename = filename.split('.')[0];
+        const public_id = `sajjalashree/${fieldname}/${baseFilename}`;
+        const isPdf = format === 'pdf';
+
+        // 1) Try local file first
         const allowedDir = path.resolve(UPLOADS_ROOT, folder);
         const filePath = path.resolve(allowedDir, filename);
-
-        // Ensure resolved path is inside the allowed folder (prevents traversal)
-        if (!filePath.startsWith(allowedDir + path.sep)) {
-            return res.status(400).json({ success: false, message: 'Invalid path' })
+        try {
+            await fs.promises.access(filePath, fs.constants.R_OK);
+            if (isPdf) {
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+            }
+            return res.sendFile(filePath);
+        } catch {
+            // Local file not found, try Cloudinary
         }
 
-        await fs.promises.access(filePath, fs.constants.R_OK);
-        return res.sendFile(filePath);
+        // 2) Try Cloudinary using private_download_url (properly signed)
+        const expiresAt = Math.floor(Date.now() / 1000) + 300; // 5 min expiry
+
+        const getClient = (url) => url.startsWith('http://') ? require('http') : require('https');
+
+        const streamFromUrl = (url, cb) => {
+            getClient(url).get(url, (cloudinaryRes) => {
+                // Follow one redirect
+                if (cloudinaryRes.statusCode >= 300 && cloudinaryRes.statusCode < 400 && cloudinaryRes.headers.location) {
+                    getClient(cloudinaryRes.headers.location).get(cloudinaryRes.headers.location, (rr) => {
+                        cb(rr.statusCode === 200 ? rr : null);
+                    }).on('error', () => cb(null));
+                    return;
+                }
+                cb(cloudinaryRes.statusCode === 200 ? cloudinaryRes : null);
+            }).on('error', () => cb(null));
+        };
+
+        // Try as 'image' resource type first (covers files uploaded with resource_type: auto)
+        const urlAsImage = cloudinary.utils.private_download_url(public_id, format, {
+            resource_type: 'image',
+            type: 'authenticated',
+            expires_at: expiresAt
+        });
+
+        streamFromUrl(urlAsImage, (imageStream) => {
+            if (imageStream) {
+                if (isPdf) {
+                    res.setHeader('Content-Type', 'application/pdf');
+                    res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+                } else if (imageStream.headers['content-type']) {
+                    res.setHeader('Content-Type', imageStream.headers['content-type']);
+                }
+                return imageStream.pipe(res);
+            }
+
+            // Try as 'raw' resource type (covers files uploaded with resource_type: raw)
+            const urlAsRaw = cloudinary.utils.private_download_url(public_id, format, {
+                resource_type: 'raw',
+                type: 'authenticated',
+                expires_at: expiresAt
+            });
+
+            streamFromUrl(urlAsRaw, (rawStream) => {
+                if (rawStream) {
+                    if (isPdf) {
+                        res.setHeader('Content-Type', 'application/pdf');
+                        res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+                    } else if (rawStream.headers['content-type']) {
+                        res.setHeader('Content-Type', rawStream.headers['content-type']);
+                    }
+                    return rawStream.pipe(res);
+                }
+
+                // Nothing found
+                res.status(404).json({ success: false, message: 'File not found' });
+            });
+        });
+
     } catch (e) {
-        if (e && (e.code === 'ENOENT' || e.code === 'EACCES')) {
-            return res.status(404).json({ success: false, message: 'File not found' })
-        }
-        next(e)
+        next(e);
     }
 })
 
@@ -81,6 +151,7 @@ app.post('/enquiry', async (req, res, next) => {
         if (!from_email || !/^([\w-.]+)@([\w-]+)\.([a-zA-Z]{2,})$/.test(from_email.trim())) {
             errors.email = 'Invalid email address.';
         }
+
         if (!phone || !/^\+?[\d\s\-().]{10,15}$/.test(phone.trim())) {
             errors.phone = 'Phone must be 10-15 digits.';
         }
@@ -301,6 +372,14 @@ app.post('/apply', upload.fields([{ name: 'aadhar', maxCount: 1 }, { name: 'phot
                 errors.aadhar = 'Aadhar file must be less than 5MB.';
             }
         }
+        // Helper to strip Cloudinary folder prefix and preserve extension
+        const getBaseNameWithExt = (fileObj) => {
+            if (!fileObj) return '';
+            const base = fileObj.filename.split('/').pop();
+            const ext = path.extname(fileObj.originalname);
+            return base.includes('.') ? base : base + ext;
+        };
+
         // Certificate (optional)
         let certificatePath = '';
         if (files.certificate && files.certificate[0]) {
@@ -311,7 +390,7 @@ app.post('/apply', upload.fields([{ name: 'aadhar', maxCount: 1 }, { name: 'phot
             if (certificate.size > 5 * 1024 * 1024) {
                 errors.certificate = 'Certificate file must be less than 5MB.';
             }
-            certificatePath = certificate.filename;
+            certificatePath = getBaseNameWithExt(certificate);
         }
 
         // If any errors, return 400
@@ -319,8 +398,8 @@ app.post('/apply', upload.fields([{ name: 'aadhar', maxCount: 1 }, { name: 'phot
             return res.status(400).json({ success: false, errors });
         }
 
-        const photoPath = files.photo[0].filename;
-        const aadharPath = files.aadhar[0].filename;
+        const photoPath = getBaseNameWithExt(files.photo[0]);
+        const aadharPath = getBaseNameWithExt(files.aadhar[0]);
 
         const sqlPostQuery = 'INSERT INTO career_applications (full_name,email,phone,aadhar_card,photo,message,experience_years,certificate) VALUE (?,?,?,?,?,?,?,?)';
         const result = await db.query(sqlPostQuery, [name.trim(), email.trim(), phone.trim(), aadharPath, photoPath, message.trim(), exp, certificatePath]);
@@ -336,6 +415,47 @@ app.post('/apply', upload.fields([{ name: 'aadhar', maxCount: 1 }, { name: 'phot
             .catch(err => console.error('Error sending applicant email:', err));
         sendAdminEmail({ name, email, phone, experience: exp, message })
             .catch(err => console.error('Error sending admin email:', err));
+
+        // Trigger background upload to Cloudinary
+        const uploadToCloudinaryBackground = async (uploadFiles) => {
+            const uploadFile = async (fileArray) => {
+                if (!fileArray || !fileArray[0]) return;
+                const file = fileArray[0];
+                try {
+                    let fieldname = file.fieldname;
+                    if (fieldname === 'photos') fieldname = 'photo';
+                    const baseFilename = file.filename.split('.')[0];
+                    const folder = `sajjalashree/${fieldname}`;
+
+                    let resType = 'auto';
+                    if (file.mimetype === 'application/pdf') {
+                        resType = 'raw';
+                    } else if (file.mimetype && file.mimetype.startsWith('image/')) {
+                        resType = 'image';
+                    }
+
+                    await cloudinary.uploader.upload(file.path, {
+                        folder: folder,
+                        public_id: baseFilename,
+                        type: 'authenticated',
+                        resource_type: resType
+                    });
+
+                    // Cleanup local file after successful upload to save space
+                    await fs.promises.unlink(file.path).catch(e => console.error('Failed to unlink local file:', e));
+                } catch (err) {
+                    console.error('Cloudinary background upload error:', err);
+                }
+            };
+
+            await Promise.all([
+                uploadFile(uploadFiles.photo),
+                uploadFile(uploadFiles.aadhar),
+                uploadFile(uploadFiles.certificate)
+            ]);
+        };
+        uploadToCloudinaryBackground(files);
+
     } catch (e) {
         next(e);
     }
@@ -544,6 +664,9 @@ app.post('/admin/login', async (req, res) => {
     }
 })
 
+const { startBackupScheduler } = require('./config/backup');
+
 app.listen(3000, () => {
     console.log('Server running at http://localhost:3000')
+    startBackupScheduler();
 })
