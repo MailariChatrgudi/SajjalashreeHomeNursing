@@ -8,12 +8,24 @@ const bcrypt = require('bcrypt');
 const { generateToken, authenticateToken, verifyToken } = require('./config/jwt');
 const { sendApplicantEmail, sendAdminEmail, sendGeneralEnquiryAlert, sendProductEnquiryAlert } = require('./config/email');
 
+const rateLimit = require('express-rate-limit');
+
 require('dotenv').config();
 const app = express();
+
+// Apply rate limiting
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: 'Too many requests from this IP, please try again later.'
+});
+
 app.use(express.json())
 app.use(express.static(path.join(__dirname, "../Frontend")))
 app.use(express.static(path.join(__dirname, "../Admin")))
 app.use(cors())
+
+app.use(limiter);
 
 // Admin authentication middleware example (Bearer token)
 // Required behavior: if not authenticated -> 401 {success:false,message:"Unauthorized"}
@@ -544,6 +556,7 @@ app.post('/admin/login', async (req, res) => {
     }
 })
 
-app.listen(3000, () => {
-    console.log('Server running at http://localhost:3000')
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`)
 })

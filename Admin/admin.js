@@ -28,11 +28,11 @@
    ================================================================ */
 
 const API = {
-  applications: 'http://localhost:3000/admin/applications',
-  generalEnquiries: 'http://localhost:3000/admin/enquiries',
-  productEnquiries: 'http://localhost:3000/admin/product-enquiries',
-  updateStatus: (id) => `http://localhost:3000/admin/update-status/${id}`,
-  delete: (id) => `http://localhost:3000/admin/applications/${id}`,
+  applications: '/admin/applications',
+  generalEnquiries: '/admin/enquiries',
+  productEnquiries: '/admin/product-enquiries',
+  updateStatus: (id) => `/admin/update-status/${id}`,
+  delete: (id) => `/admin/applications/${id}`,
 };
 
 const FILES = {
@@ -388,7 +388,7 @@ async function updateGeneralEnquiryStatus(id, status) {
   if (!id || !status) return;
   try {
     const token = localStorage.getItem('adminToken');
-    const res = await fetch(`http://localhost:3000/admin/enquiries/${encodeURIComponent(id)}/status`, {
+    const res = await fetch(`/admin/enquiries/${encodeURIComponent(id)}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -408,7 +408,7 @@ async function updateProductEnquiryStatus(id, status) {
   if (!id || !status) return;
   try {
     const token = localStorage.getItem('adminToken');
-    const res = await fetch(`http://localhost:3000/admin/product-enquiries/${encodeURIComponent(id)}/status`, {
+    const res = await fetch(`/admin/product-enquiries/${encodeURIComponent(id)}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -429,7 +429,7 @@ async function deleteGeneralEnquiry(id) {
   if (!confirm('Delete this general enquiry?')) return;
   try {
     const token = localStorage.getItem('adminToken');
-    const res = await fetch(`http://localhost:3000/admin/enquiries/${encodeURIComponent(id)}`, {
+    const res = await fetch(`/admin/enquiries/${encodeURIComponent(id)}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -446,7 +446,7 @@ async function deleteProductEnquiry(id) {
   if (!confirm('Delete this product enquiry?')) return;
   try {
     const token = localStorage.getItem('adminToken');
-    const res = await fetch(`http://localhost:3000/admin/product-enquiries/${encodeURIComponent(id)}`, {
+    const res = await fetch(`/admin/product-enquiries/${encodeURIComponent(id)}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });

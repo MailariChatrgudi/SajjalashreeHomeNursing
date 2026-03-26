@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (isFormValid) {
                   try {
                         const formData = new FormData(careerForm)
-                        const response = await fetch('http://localhost:3000/apply', { method: 'POST', body: formData })
+                        const response = await fetch('/apply', { method: 'POST', body: formData })
                         const data = await response.json()
                         if (data.success) {
                               showToast("✅ Application submitted successfully! Check your email for confirmation.", 'success');
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   const from_email = generalEnquiryForm.from_email.value.trim();
                   const phone = generalEnquiryForm.phone.value.trim();
                   try {
-                        const response = await fetch('http://localhost:3000/enquiry', {
+                        const response = await fetch('/enquiry', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({ from_name, from_email, phone })
@@ -262,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   const from_name = form.from_name.value.trim();
                   const phone = form.phone.value.trim();
                   try {
-                        const response = await fetch('http://localhost:3000/product-enquiry', {
+                        const response = await fetch('/product-enquiry', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({ product_name, from_name, phone })
@@ -307,7 +307,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   }
 
                   try {
-                        const response = await fetch('http://localhost:3000/call-back', {
+                        const response = await fetch('/call-back', {
                               method: 'POST',
                               headers: { 'Content-Type': 'application/json' },
                               body: JSON.stringify({ phone })
