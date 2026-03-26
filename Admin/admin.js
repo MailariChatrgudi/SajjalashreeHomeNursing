@@ -973,15 +973,32 @@ async function openProtectedPdfViewer(folder, filename, label) {
   if (!folder || !filename) { showToast('File path not available', 'error'); return; }
 
   try {
-    const url = await getProtectedBlobUrl(folder, filename);
-    if (frame) frame.src = url;
+    const token = localStorage.getItem('adminToken');
+    const res = await fetch(buildProtectedFilePath(folder, filename), {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (res.status === 401) {
+      clearUserSession();
+      window.location.href = 'admin-login.html';
+      return;
+    }
+    if (!res.ok) throw new Error(`File fetch failed (${res.status})`);
+
+    const arrayBuffer = await res.arrayBuffer();
+    const pdfBlob = new Blob([arrayBuffer], { type: 'application/pdf' });
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+
+    if (frame) frame.src = pdfUrl;
     if (labelEl) labelEl.textContent = label || 'Document';
     if (downloadEl) {
-      downloadEl.href = url;
+      downloadEl.href = pdfUrl;
       downloadEl.setAttribute('download', filename);
     }
     openModal('pdfModal');
-  } catch {
+  } catch (e) {
+    console.log(e.message)
     showToast('Could not load document', 'error');
   }
 }

@@ -2,15 +2,22 @@ const multer = require('multer')
 const path = require('path')
 const crypto = require('crypto')
 
+const cloudinary = require('cloudinary').v2;
+require('dotenv').config();
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (file.fieldname === 'photo') {
       cb(null, path.join(__dirname, "../public/uploads/photos"))
-    }
-    else if (file.fieldname === 'aadhar') {
+    } else if (file.fieldname === 'aadhar') {
       cb(null, path.join(__dirname, "../public/uploads/aadhar"))
-    }
-    else if (file.fieldname === 'certificate') {
+    } else if (file.fieldname === 'certificate') {
       cb(null, path.join(__dirname, "../public/uploads/certificate"))
     }
   },
@@ -18,7 +25,7 @@ const storage = multer.diskStorage({
     const uniqueSuffix = `${Date.now()}${crypto.randomBytes(6).toString('hex')}`
     cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
   }
-})
+});
 
 const upload = multer({
   storage,
