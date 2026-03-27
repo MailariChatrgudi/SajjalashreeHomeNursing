@@ -3,6 +3,11 @@
    Login & Register form logic with validation
    ================================================================ */
 
+// Auto-detect backend URL
+const AUTH_API_BASE = window.location.hostname.includes('github.io')
+  ? 'https://sajjalashreehomenursing.onrender.com'
+  : '';
+
 /**
  * Check if user is authenticated and token is still valid
  */
@@ -213,7 +218,7 @@ async function handleLoginSubmit(event) {
 
     try {
         // Make API call to login
-        const response = await fetch('/admin/login', {
+        const response = await fetch(`${AUTH_API_BASE}/admin/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -536,7 +541,7 @@ async function handleAddUserSubmit(event) {
 
     try {
         // Make API call to add new admin (requires authentication)
-        const response = await fetch('/admin/newAdmin', {
+        const response = await fetch(`${AUTH_API_BASE}/admin/newAdmin`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -631,7 +636,7 @@ async function handleForgotPasswordSubmit(event) {
     submitBtn.innerHTML = '<i class="fas fa-spinner"></i><span>Sending code...</span>';
 
     try {
-        const response = await fetch('/admin/forgot-password', {
+        const response = await fetch(`${AUTH_API_BASE}/admin/forgot-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username })
@@ -673,7 +678,7 @@ async function handleOtpSubmit(event) {
     submitBtn.innerHTML = '<i class="fas fa-spinner"></i><span>Verifying...</span>';
 
     try {
-        const response = await fetch('/admin/verify-otp', {
+        const response = await fetch(`${AUTH_API_BASE}/admin/verify-otp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username: resetFlowState.username, otp })
@@ -724,7 +729,7 @@ async function handleResetPasswordSubmit(event) {
     submitBtn.innerHTML = '<i class="fas fa-spinner"></i><span>Updating...</span>';
 
     try {
-        const response = await fetch('/admin/reset-password', {
+        const response = await fetch(`${AUTH_API_BASE}/admin/reset-password`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

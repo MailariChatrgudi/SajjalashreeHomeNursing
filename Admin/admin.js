@@ -26,17 +26,21 @@
 /* ================================================================
    1. CONFIGURATION & STATE
    ================================================================ */
+// Auto-detect backend: relative paths on Render, full URL on GitHub Pages
+const API_BASE = window.location.hostname.includes('github.io')
+  ? 'https://sajjalashreehomenursing.onrender.com'
+  : '';
 
 const API = {
-  applications: '/admin/applications',
-  generalEnquiries: '/admin/enquiries',
-  productEnquiries: '/admin/product-enquiries',
-  updateStatus: (id) => `/admin/update-status/${id}`,
-  delete: (id) => `/admin/applications/${id}`,
+  applications: `${API_BASE}/admin/applications`,
+  generalEnquiries: `${API_BASE}/admin/enquiries`,
+  productEnquiries: `${API_BASE}/admin/product-enquiries`,
+  updateStatus: (id) => `${API_BASE}/admin/update-status/${id}`,
+  delete: (id) => `${API_BASE}/admin/applications/${id}`,
 };
 
 const FILES = {
-  base: '/admin/file',
+  base: `${API_BASE}/admin/file`,
   photos: 'photos',
   aadhar: 'aadhar',
   certificate: 'certificate',
@@ -388,7 +392,7 @@ async function updateGeneralEnquiryStatus(id, status) {
   if (!id || !status) return;
   try {
     const token = localStorage.getItem('adminToken');
-    const res = await fetch(`/admin/enquiries/${encodeURIComponent(id)}/status`, {
+    const res = await fetch(`${API_BASE}/admin/enquiries/${encodeURIComponent(id)}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -408,7 +412,7 @@ async function updateProductEnquiryStatus(id, status) {
   if (!id || !status) return;
   try {
     const token = localStorage.getItem('adminToken');
-    const res = await fetch(`/admin/product-enquiries/${encodeURIComponent(id)}/status`, {
+    const res = await fetch(`${API_BASE}/admin/product-enquiries/${encodeURIComponent(id)}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -429,7 +433,7 @@ async function deleteGeneralEnquiry(id) {
   if (!confirm('Delete this general enquiry?')) return;
   try {
     const token = localStorage.getItem('adminToken');
-    const res = await fetch(`/admin/enquiries/${encodeURIComponent(id)}`, {
+    const res = await fetch(`${API_BASE}/admin/enquiries/${encodeURIComponent(id)}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -446,7 +450,7 @@ async function deleteProductEnquiry(id) {
   if (!confirm('Delete this product enquiry?')) return;
   try {
     const token = localStorage.getItem('adminToken');
-    const res = await fetch(`/admin/product-enquiries/${encodeURIComponent(id)}`, {
+    const res = await fetch(`${API_BASE}/admin/product-enquiries/${encodeURIComponent(id)}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
