@@ -541,7 +541,7 @@ function renderTable(apps) {
     tr.dataset.id = id;
 
     tr.innerHTML = `
-      <td data-label="#" style="color:var(--txt-3);font-size:.75rem;">${id}</td>
+      <td data-label="#" style="color:var(--txt-3);font-size:.75rem;">${idx + 1}</td>
 
       <td class="td-applicant">
         <div class="applicant-cell">
