@@ -162,7 +162,42 @@ document.addEventListener('DOMContentLoaded', function () {
             if (isFormValid) {
                   try {
                         const formData = new FormData(careerForm)
-                        const response = await fetch('/apply', { method: 'POST', body: formData })
+
+                        // Retry logic for network issues (Render cold starts, flaky mobile)
+                        let response;
+                        let lastError;
+                        const MAX_RETRIES = 2;
+
+                        for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+                              try {
+                                    if (attempt > 0) {
+                                          btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status"></span>Retrying (${attempt}/${MAX_RETRIES})...`;
+                                    }
+
+                                    const controller = new AbortController();
+                                    const timeout = setTimeout(() => controller.abort(), 60000); // 60s timeout
+
+                                    response = await fetch('/apply', {
+                                          method: 'POST',
+                                          body: formData,
+                                          signal: controller.signal
+                                    });
+                                    clearTimeout(timeout);
+                                    break; // Success — exit retry loop
+
+                              } catch (err) {
+                                    lastError = err;
+                                    if (attempt < MAX_RETRIES) {
+                                          // Wait before retry (1s, then 2s)
+                                          await new Promise(r => setTimeout(r, (attempt + 1) * 1000));
+                                    }
+                              }
+                        }
+
+                        if (!response) {
+                              throw lastError || new Error('Network request failed');
+                        }
+
                         const data = await response.json()
                         if (data.success) {
                               showToast("✅ Application submitted successfully! Check your email for confirmation.", 'success');
@@ -198,8 +233,12 @@ document.addEventListener('DOMContentLoaded', function () {
                               showToast("✕ " + errorMsg, 'error');
                         }
                   } catch (err) {
-                        showToast("❌ Network error. Please check your connection and try again.", 'error');
-                        console.log(err.message)
+                        if (err.name === 'AbortError') {
+                              showToast("⏱️ Upload timed out. Please check your internet connection and try again.", 'error');
+                        } else {
+                              showToast("❌ Network error. Please check your connection and try again.", 'error');
+                        }
+                        console.error(err.message)
 
                   } finally {
                         btn.disabled = false;
