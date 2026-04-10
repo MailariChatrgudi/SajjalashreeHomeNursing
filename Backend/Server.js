@@ -20,6 +20,13 @@ const limiter = rateLimit({
     message: 'Too many requests from this IP, please try again later.'
 });
 
+// Ensure upload directories exist (Render starts with empty filesystem)
+const uploadDirs = ['photos', 'aadhar', 'certificate'];
+uploadDirs.forEach(dir => {
+    const dirPath = path.join(__dirname, 'public', 'uploads', dir);
+    fs.mkdirSync(dirPath, { recursive: true });
+});
+
 app.use(express.json())
 app.use(express.static(path.join(__dirname, "../Frontend")))
 app.use(express.static(path.join(__dirname, "../Admin")))
