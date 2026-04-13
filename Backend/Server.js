@@ -689,4 +689,17 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server running on port ${port}`)
     startBackupScheduler();
+
+    // Keep Render alive — ping every 14 min (free tier sleeps after 15 min)
+    if (process.env.RENDER) {
+        const RENDER_URL = process.env.RENDER_EXTERNAL_URL || `https://sajjalashreehomenursing.onrender.com`;
+        setInterval(() => {
+            require('https').get(RENDER_URL, (res) => {
+                console.log(`[Keep-Alive] Pinged ${RENDER_URL} — Status: ${res.statusCode}`);
+            }).on('error', (err) => {
+                console.error('[Keep-Alive] Ping failed:', err.message);
+            });
+        }, 14 * 60 * 1000); // 14 minutes
+        console.log('[Keep-Alive] Auto-ping started — every 14 minutes');
+    }
 })
