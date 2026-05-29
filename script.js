@@ -683,15 +683,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                         const data = await response.json();
                         if (data.success) {
-                              showToast('✅ Enquiry submitted successfully!', 'success');
+                              showToast('Enquiry submitted successfully!', 'success');
                               generalEnquiryForm.reset();
                         } else if (data.errors) {
-                              showToast('✕ ' + Object.values(data.errors).join(' | '), 'error');
+                              showToast(Object.values(data.errors).join(' | '), 'error');
                         } else {
-                              showToast('✕ ' + (data.message || 'Submission failed.'), 'error');
+                              showToast(data.message || 'Submission failed.', 'error');
                         }
                   } catch (err) {
-                        showToast('❌ Network error. Please try again.', 'error');
+                        showToast('Network error. Please try again.', 'error');
                   } finally {
                         if (btn) {
                               btn.disabled = false;
@@ -740,7 +740,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         const data = await response.json();
                         if (data.success) {
                               setEnquiryBtnState(btn, 'success');
-                              showToast(data.message || '✅ Product enquiry submitted successfully!', 'success');
+                              showToast(data.message || 'Product enquiry submitted successfully!', 'success');
                               setTimeout(() => {
                                     setEnquiryBtnState(btn, 'reset');
                                     form.reset();
@@ -793,14 +793,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         const data = await response.json();
 
                         if (data.success) {
-                              showToast('✅ Call back request sent!', 'success');
+                              showToast('Call back request sent!', 'success');
                               callBackForm.reset();
                               setTimeout(() => closePopup(), 1500);
                         } else {
-                              showToast('✕ ' + (data.message || 'Request failed.'), 'error');
+                              showToast(data.message || 'Request failed.', 'error');
                         }
                   } catch (err) {
-                        showToast('❌ Network error. Please try again.', 'error');
+                        showToast('Network error. Please try again.', 'error');
                   } finally {
                         if (btn) {
                               btn.disabled = false;
