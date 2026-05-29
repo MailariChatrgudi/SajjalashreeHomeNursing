@@ -1,3 +1,5 @@
+require('dns').setDefaultResultOrder('ipv4first'); // Force IPv4 globally to fix Render SMTP ENETUNREACH
+
 const express = require('express')
 const helmet = require('helmet');
 const db = require('./config/database');
@@ -297,15 +299,11 @@ app.post('/product-enquiry', async (req, res, next) => {
         const sql = 'INSERT INTO product_enquiries (product_name, name, phone) VALUES (?, ?, ?)';
         await db.query(sql, [product_name.trim(), from_name.trim(), phone.trim()]);
         
-        // Wait for the admin email alert to finish and check if it succeeded
-        const mailSent = await sendProductEnquiryAlert({ product_name, name: from_name, phone });
+        res.status(200).json({ success: true, message: 'Product enquiry submitted successfully!' });
         
-        if (mailSent) {
-            res.status(200).json({ success: true, message: '✅ Product enquiry submitted successfully! (Alert email sent)' });
-        } else {
-            // Still success because it was saved to the database, but email failed
-            res.status(200).json({ success: true, message: '✅ Product enquiry submitted! (But admin email failed)' });
-        }
+        // Send admin alert asynchronously (Fix 12: SMTP failure is already caught in email.js)
+        sendProductEnquiryAlert({ product_name, name: from_name, phone })
+            .catch(err => console.error('Error sending product enquiry alert:', err));
     } catch (e) {
         // Fix 12: Handle MySQL pool exhaustion
         if (e.code === 'ER_CON_COUNT_ERROR' || e.code === 'ETIMEDOUT' || e.code === 'ECONNREFUSED' || e.message.includes('pool')) {
