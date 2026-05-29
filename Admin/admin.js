@@ -26,10 +26,10 @@
 /* ================================================================
    1. CONFIGURATION & STATE
    ================================================================ */
-// Auto-detect backend: relative paths on Render, full URL on GitHub Pages
-const API_BASE = window.location.hostname.includes('github.io')
-  ? 'https://sajjalashreehomenursing.onrender.com'
-  : '';
+// Auto-detect backend: localhost in dev, Render in production
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+  ? 'http://localhost:3000'
+  : 'https://sajjalashreehomenursing.onrender.com';
 
 const API = {
   applications: `${API_BASE}/admin/applications`,
@@ -1002,7 +1002,7 @@ async function openProtectedPdfViewer(folder, filename, label) {
     }
     openModal('pdfModal');
   } catch (e) {
-    console.log(e.message)
+    console.error('openProtectedPdfViewer:', e.message);
     showToast('Could not load document', 'error');
   }
 }

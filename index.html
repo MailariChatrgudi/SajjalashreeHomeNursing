@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sajjalashree Home Nurshing</title>
+  <title>Sajjalashree Home Nursing Services</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
@@ -27,6 +27,29 @@
     href="https://res.cloudinary.com/dalm1fvto/image/upload/v1742290278/a39b81c5-2082-4378-9f7a-0a24cc7f98f1_e7yadd.png">
 
   <style>
+    .btn-spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: btn-spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    @keyframes btn-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Fixed width for product enquiry submit buttons so they don't jump on state change */
+    .modal-footer .btn-success {
+      min-width: 140px;
+    }
+
     #navbar {
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
     }
@@ -361,12 +384,12 @@
               provide quality care to our patients. Our goal is to provide compassionate care to our patients and help
               them recover quickly. We are committed to providing the best home nursing services in Bangalore.</p>
           </div>
-          <img src="https://i.pinimg.com/736x/b3/b8/21/b3b821e986117eeaa303738609767810.jpg"
-            class="about-img  d-md-none  m-lg-auto" alt="about image" />
+          <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1778171919/about/team-photo.jpg"
+            class="about-img  d-md-none  m-lg-auto" alt="about image" loading="lazy" />
           <div class="col-12 d-flex flex-column justify-content-center align-items-center">
             <figure>
-              <img src="https://i.pinimg.com/736x/b3/b8/21/b3b821e986117eeaa303738609767810.jpg"
-                class="about-img d-none d-md-block  m-lg-auto" alt="about image" />
+              <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1778171919/about/team-photo.jpg"
+                class="about-img d-none d-md-block  m-lg-auto" alt="about image" loading="lazy" />
               <figcaption class="text-center d-none d-md-block"
                 style="font-weight: bold;font-size: 20px;font-family: Roboto; color: #ffffff;">We have been the trusted
                 Sajjalashree home health care for
@@ -396,8 +419,9 @@
 
           <div class="col-12 col-md-6">
             <h2 class="text-center about-subtitle">Quality Approach</h2>
-            <p class="text-center about-description" style="color:#ffffff;">To be the most respected and trusted home
-              nursing service facilitators in India and Abroad.</p>
+            <p class="text-center about-description" style="color:#ffffff;">We maintain rigorous standards in caregiver
+              selection, training, and ongoing performance review. Every nurse and attendant undergoes background
+              verification and skill assessment before being placed with a patient.</p>
           </div>
         </div>
     </section>
@@ -416,7 +440,7 @@
           <div class="col-12 col-md-6 ">
             <div class="sevice-card d-flex flex-column m-3 shadow">
               <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1742291289/servicesimage4_bhvfx6.png"
-                class="service-img">
+                loading="lazy" class="service-img">
               <h1 class="service-name">ELDER CARE</h1>
               <p class="service-descr">At SAJJALASHREE HOME NURSING SERVICES, we provide personalized elder care
                 services to ensure comfort, dignity, and well-being for your loved ones. Our professional caregivers and
@@ -433,7 +457,7 @@
           <div class="col-12 col-md-6 ">
             <div class="sevice-card d-flex flex-column m-3 shadow">
               <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1742291215/servicesimage2_gu78ar.png"
-                class="service-img">
+                loading="lazy" class="service-img">
               <h1 class="service-name">POST OPERATIVE CARE </h1>
               <p class="service-descr">Recovering from surgery requires specialized care and attention to ensure a safe,
                 smooth, and speedy recovery. At SAJJALASHREE HOME NURSING SERVICES, we provide professional
@@ -450,7 +474,7 @@
           <div class="col-12 col-md-6 ">
             <div class="sevice-card d-flex flex-column m-3 shadow">
               <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1742291327/servicesimage5_aoisnq.png"
-                class="service-img">
+                loading="lazy" class="service-img">
               <h1 class="service-name">HOSPITAL SPECIAL NURSING CARE</h1>
               <p class="service-descr">At SAJJALASHREE HOME NURSING SERVICES, we offer specialized nursing care for
                 patients who require expert medical attention during their hospital stay. Our highly trained nurses
@@ -466,7 +490,7 @@
           <div class="col-12 col-md-6 ">
             <div class="sevice-card d-flex flex-column m-3 shadow">
               <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1742291357/servicesimage6_drogpy.png"
-                class="service-img">
+                loading="lazy" class="service-img">
               <h1 class="service-name">MOTHER AND BABY CARE</h1>
               <p class="service-descr">Welcoming a baby is a beautiful journey, but it also comes with the need for
                 specialized care for both the mother and newborn. At SAJJALASHREE HOME NURSING SERVICES, we provide
@@ -483,7 +507,7 @@
           <div class="col-12 col-md-6 ">
             <div class="sevice-card d-flex flex-column m-3 shadow">
               <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1742291259/servicesimage3_oqn2rm.png"
-                class="service-img">
+                loading="lazy" class="service-img">
               <h1 class="service-name">BEDSIDE ATTENDANT SERVICES AT HOME</h1>
               <p class="service-descr">Caring for a loved one who is bedridden or requires continuous assistance can be
                 challenging. At SAJJALASHREE HOME NURSING SERVICES, we offer professional bedside attendant services to
@@ -499,7 +523,7 @@
           <div class="col-12 col-md-6 ">
             <div class="sevice-card d-flex flex-column m-3 shadow">
               <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1742291159/servicesimage1_oagukg.png"
-                class="service-img">
+                loading="lazy" class="service-img">
               <h1 class="service-name">PERSONAL SUPPORTIVE CARE</h1>
               <p class="service-descr">At SAJJALASHREE HOME NURSING SERVICES, we understand that some individuals need
                 extra support in their daily lives due to age, illness, disability, or post-surgical recovery. Our
@@ -516,7 +540,7 @@
           <div class="col-12 col-md-6">
             <div class="sevice-card d-flex flex-column m-3 shadow">
               <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1742291386/servicesimage7_u9ezqs.png"
-                class="service-img">
+                loading="lazy" class="service-img">
               <h1 class="service-name">DEMENTIA CARE</h1>
               <p class="service-descr">Caring for a loved one with dementia or Alzheimer’s requires patience,
                 understanding, and professional expertise. At SAJJALASHREE HOME NURSING SERVICES, we provide specialized
@@ -533,7 +557,7 @@
           <div class="col-12 col-md-6">
             <div class="sevice-card d-flex flex-column m-3 shadow">
               <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1742291395/servicesimage8_lvcq83.jpg"
-                class="service-img">
+                loading="lazy" class="service-img">
               <h1 class="service-name">AMBULANCE SERVICES 24 HOURS</h1>
               <p class="service-descr">Medical emergencies require quick action and professional care. At SAJJALASHREE
                 HOME NURSING SERVICES, we provide 24-hour ambulance services to ensure safe, fast, and efficient
@@ -564,7 +588,7 @@
             <div class="col-12 col-md-6 col-lg-3">
               <div class="d-flex flex-column justify-content-center align-items-center">
                 <img src="https://productimages.withfloats.com/tile/67650e2d984056d88641b467.jpg" alt="product img"
-                  class="product-image">
+                  loading="lazy" class="product-image">
                 <div class="product-area text-center">
                   <h1 class="product-name" name="product_name">Hospital Cot</h1>
                   <h2 class="product-price">INR ₹11999</h2>
@@ -582,10 +606,10 @@
                             </h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
+                          <form id="cot-enquiry" data-product="Hospital Cot">
                           <div class="modal-body">
                             <p>Hi, I am interested in "HOSPITAL COT" and need more information on the same. Please
                               contact me.</p>
-                            <form id="cot-enquiry" data-product="Hospital Cot">
                               <input type="text" class="form-control mb-3" name="from_name" placeholder="Name"
                                 aria-label="Name" id="productUserName">
                               <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number"
@@ -593,7 +617,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success">Send Enquiry</button>
                           </div>
                           </form>
                         </div>
@@ -606,7 +630,7 @@
             <div class="col-12 col-md-6 col-lg-3">
               <div class="d-flex flex-column justify-content-center align-items-center m-2">
                 <img src="https://productimages.withfloats.com/tile/6376f177d239f5000103bfd2.jpg" alt="product img"
-                  class="product-image" style="width: 100%; height: 250px;">
+                  loading="lazy" class="product-image" style="width: 100%; height: 250px;">
                 <div class="product-area text-center">
                   <h1 class="product-name mt-5" name="product_name">Walking Stick</h1>
                   <h2 class="product-price">INR ₹799</h2>
@@ -624,10 +648,10 @@
                             </h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
+                          <form id="stick-enquiry" data-product="Walking Stick">
                           <div class="modal-body">
                             <p>Hi, I am interested in "Walking Stick" and need more information on the same. Please
                               contact me.</p>
-                            <form id="stick-enquiry" data-product="Walking Stick">
                               <input type="text" class="form-control mb-3" name="from_name" placeholder="Name"
                                 aria-label="Name" required>
                               <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number"
@@ -635,7 +659,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success">Send Enquiry</button>
                           </div>
                           </form>
                         </div>
@@ -647,7 +671,7 @@
             </div>
             <div class="col-12 col-md-6 col-lg-3">
               <div class="d-flex flex-column justify-content-center align-items-center m-2">
-                <img src="Images/Walker.jpg" alt="product img" class="product-image">
+                <img src="/images/Walker.jpg" alt="product img" class="product-image" loading="lazy">
                 <div class="product-area text-center">
                   <h1 class="product-name" name="product_name">Walker</h1>
                   <h2 class="product-price">INR ₹1799</h2>
@@ -665,10 +689,10 @@
                             </h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
+                          <form id="walker-enquiry" data-product="Walker">
                           <div class="modal-body">
                             <p>Hi, I am interested in "Walker" and need more information on the same. Please contact me.
                             </p>
-                            <form id="walker-enquiry" data-product="Walker">
                               <input type="text" class="form-control mb-3" name="from_name" placeholder="Name"
                                 aria-label="Name" required>
                               <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number"
@@ -676,7 +700,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success">Send Enquiry</button>
                           </div>
                           </form>
                         </div>
@@ -688,7 +712,7 @@
             </div>
             <div class="col-12 col-md-6 col-lg-3">
               <div class="d-flex flex-column justify-content-center align-items-center m-2">
-                <img src="Images/WheelChair.jpg" alt="product img" class="product-image">
+                <img src="/images/WheelChair.jpg" alt="product img" class="product-image" loading="lazy">
                 <div class="product-area text-center">
                   <h1 class="product-name" name="product_name">Wheel Chair</h1>
                   <h2 class="product-price">INR ₹5899</h2>
@@ -706,10 +730,10 @@
                             </h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
+                          <form id="wheelchiar-enquiry" data-product="Wheelchair">
                           <div class="modal-body">
                             <p>Hi, I am interested in "Wheel Chair" and need more information on the same. Please
                               contact me.</p>
-                            <form id="wheelchiar-enquiry" data-product="Wheelchair">
                               <input type="text" class="form-control mb-3" name="from_name" placeholder="Name"
                                 aria-label="Name" required>
                               <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number"
@@ -717,7 +741,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success">Send Enquiry</button>
                           </div>
                           </form>
                         </div>
@@ -729,7 +753,7 @@
             </div>
             <div class="col-12 col-md-6 col-lg-3">
               <div class="d-flex flex-column justify-content-center align-items-center m-2">
-                <img src="Images/Omron.jpg" alt="product img" class="product-image">
+                <img src="/images/Omron.jpg" alt="product img" class="product-image" loading="lazy">
                 <div class="product-area text-center">
                   <h1 class="product-name" name="product_name">Omron BP Monitor</h1>
                   <h2 class="product-price">INR ₹1699</h2>
@@ -747,10 +771,10 @@
                             </h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
+                          <form id="Omron-enquiry" data-product="Omron BP Monitor">
                           <div class="modal-body">
                             <p>Hi, I am interested in "Omron BP Monitor" and need more information on the same. Please
                               contact me.</p>
-                            <form id="Omron-enquiry" data-product="Omron BP Monitor">
                               <input type="text" class="form-control mb-3" name="from_name" placeholder="Name"
                                 aria-label="Name" required>
                               <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number"
@@ -758,7 +782,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success">Send Enquiry</button>
                           </div>
                           </form>
                         </div>
@@ -770,7 +794,7 @@
             </div>
             <div class="col-12 col-md-6 col-lg-3">
               <div class="d-flex flex-column justify-content-center align-items-center m-2">
-                <img src="Images/AdultDiaper.jpg" alt="product img" class="product-image">
+                <img src="/images/AdultDiaper.jpg" alt="product img" class="product-image" loading="lazy">
                 <div class="product-area text-center">
                   <h1 class="product-name" name="product_name">Adult Diaper</h1>
                   <h2 class="product-price">INR ₹239</h2>
@@ -788,10 +812,10 @@
                             </h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
+                          <form id="Adult-diaper-enquiry" data-product="adult-Diaper">
                           <div class="modal-body">
                             <p>Hi, I am interested in "everactive Adult Diaper" and need more information on the same.
                               Please contact me.</p>
-                            <form id="Adult-diaper-enquiry" data-product="adult-Diaper">
                               <input type="text" class="form-control mb-3" name="from_name" placeholder="Name"
                                 aria-label="Name" required>
                               <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number"
@@ -799,7 +823,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success">Send Enquiry</button>
                           </div>
                           </form>
                         </div>
@@ -811,7 +835,7 @@
             </div>
             <div class="col-12 col-md-6 col-lg-3">
               <div class="d-flex flex-column justify-content-center align-items-center m-2 " id="product-card">
-                <img src="Images/Acc-check.jpg" alt="product img" class="product-image">
+                <img src="/images/Acc-check.jpg" alt="product img" class="product-image" loading="lazy">
                 <div class="product-area text-center">
                   <h1 class="product-name" name="product_name">Accu-Check Active</h1>
                   <h2 class="product-price">INR ₹1799</h2>
@@ -829,10 +853,10 @@
                             </h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
+                          <form id="Accu-check-enquiry" data-product="Accu-check">
                           <div class="modal-body">
                             <p>Hi, I am interested in "Accu-Check" and need more information on the same. Please contact
                               me.</p>
-                            <form id="Accu-check-enquiry" data-product="Accu-check">
                               <input type="text" class="form-control mb-3" name="from_name" placeholder="Name"
                                 aria-label="Name" required>
                               <input type="tel" class="form-control mb-3" name="phone" placeholder="Phone Number"
@@ -840,7 +864,7 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="submit" class="btn btn-success">Send Enquiry</button>
                           </div>
                           </form>
                         </div>
@@ -868,6 +892,9 @@
         <div class="row">
           <div class="col-12 col-lg-6 order-2">
             <h1 class="career-subtitle text-center">Please fill out Below form Enter into our Career</h1>
+            <div id="careerFormAlert"
+              style="display:none;background:#fff3cd;color:#664d03;border:1px solid #ffecb5;border-radius:8px;padding:10px 12px;margin:0 16px 12px;font-size:14px;">
+            </div>
             <form id="career-form" class="d-flex row m-3" enctype="multipart/form-data" autocomplete="on">
               <div class="col-12 col-md-6">
                 <div class="form-group mb-2">
@@ -911,21 +938,171 @@
                 </div>
                 <div class="form-group mb-2">
                   <label for="adhar" class="form-label">Upload Your Adhar(Front And Back)</label>
-                  <input type="file" class="form-control" id="adhar" name="aadhar" accept=".jpg,.jpeg,.png,.pdf" required>
+                  <input type="file" class="form-control" id="adhar" name="aadhar" accept=".jpg,.jpeg,.png" required>
                   <p id="aadharErorrMsg" style="font:12px; color: red; display: none;"></p>
                 </div>
                 <div class="form-group mb-2">
-                  <label for="certificate" class="form-label">Others (Certificate if applicable)</label>
+                  <label for="certificate" class="form-label">Others (Certificate)</label>
                   <input type="file" class="form-control" id="certificate" name="certificate"
                     placeholder="upload Certificates if you are nurshing or JNM" accept=".pdf">
                   <p id="cetificateErorrMsg" style="font:12px; color: red; display: none;"></p>
                 </div>
               </div>
+
+              <style>
+                .career-single-consent-row {
+                  padding: 16px;
+                  background: #f8fbfc;
+                  border: 1px solid var(--border, #dde4ec);
+                  border-radius: 10px;
+                  margin-top: 20px;
+                  margin-bottom: 20px;
+                  display: flex;
+                  align-items: flex-start;
+                }
+
+                .single-consent-label {
+                  display: flex;
+                  align-items: flex-start;
+                  font-size: 13px;
+                  color: var(--text-light, #555);
+                  line-height: 1.6;
+                  cursor: pointer;
+                  position: relative;
+                  margin: 0;
+                }
+
+                .single-consent-label input {
+                  position: absolute;
+                  opacity: 0;
+                  cursor: pointer;
+                  height: 0;
+                  width: 0;
+                }
+
+                .single-consent-checkmark {
+                  position: relative;
+                  top: 2px;
+                  left: 0;
+                  height: 18px;
+                  width: 18px;
+                  background-color: #fff;
+                  border: 2px solid #dde4ec;
+                  border-radius: 4px;
+                  margin-right: 12px;
+                  flex-shrink: 0;
+                  transition: all 0.15s ease;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                }
+
+                .single-consent-label:hover input~.single-consent-checkmark {
+                  border-color: var(--teal, #20c997);
+                }
+
+                .single-consent-label input:checked~.single-consent-checkmark {
+                  background-color: var(--teal, #20c997);
+                  border-color: var(--teal, #20c997);
+                }
+
+                .single-consent-checkmark:after {
+                  content: "✓";
+                  position: absolute;
+                  display: none;
+                  color: white;
+                  font-size: 14px;
+                  line-height: 1;
+                  font-weight: bold;
+                }
+
+                .single-consent-label input:checked~.single-consent-checkmark:after {
+                  display: block;
+                }
+
+                .single-consent-text a {
+                  color: var(--teal, #20c997);
+                  text-decoration: underline;
+                  font-weight: 500;
+                }
+              </style>
+
+              <div class="col-12">
+                <div class="career-single-consent-row">
+                  <label class="single-consent-label">
+                    <input type="checkbox" id="consentSingle">
+                    <span class="single-consent-checkmark"></span>
+                    <span class="single-consent-text">
+                      By submitting this application, I confirm that I have read and agree to the <a
+                        href="legal/privacy-policy.html" target="_blank">Privacy Policy</a> and <a
+                        href="legal/terms.html" target="_blank">Terms &amp; Conditions</a>, and I consent to
+                      Sajjalashree Home Nursing Services collecting, storing, and sharing my Aadhaar card and passport
+                      photo with verified admins and clients solely for identity verification as described in the
+                      Privacy Policy.
+                    </span>
+                  </label>
+                </div>
+              </div>
+
               <p id="formErorrMsg" style="font:12px; color: red; display: none;"></p>
               <div class="ml-auto">
-                <button type="submit" class="btn btn-success" id="submitBtn">Submit</button>
+                <button type="submit" class="btn btn-success" id="submitBtn" disabled>Submit</button>
               </div>
             </form>
+            <!-- Career Application Success Modal Overlay -->
+            <div id="careerSuccessOverlay"
+              style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);opacity:0;transition:opacity 250ms ease;align-items:center;justify-content:center;">
+              <div id="careerSuccessCard"
+                style="background:#fff;border-radius:16px;padding:40px 32px;max-width:480px;width:90%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.3);transform:translateY(30px);opacity:0;transition:transform 300ms ease,opacity 300ms ease;text-align:center;">
+                <button id="careerModalCloseBtn" type="button"
+                  style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:24px;color:#aaa;cursor:pointer;padding:4px 8px;line-height:1;transition:color 150ms;"
+                  onmouseover="this.style.color='#333'" onmouseout="this.style.color='#aaa'">&times;</button>
+                <div id="careerModalBody">
+                  <div id="careerModalIcon" style="font-size:64px;line-height:1;margin-bottom:16px;">&#10004;&#65039;
+                  </div>
+                  <h2 id="careerModalHeading"
+                    style="font-family:inherit;font-size:1.45rem;font-weight:700;color:#1a1a2e;margin:0 0 12px;">
+                    Application Submitted!</h2>
+                  <p id="careerModalText" style="color:#555;font-size:0.93rem;line-height:1.65;margin:0 0 10px;"></p>
+                  <p id="careerModalSubtext" style="color:#777;font-size:0.85rem;margin:0 0 24px;">&#128231; A
+                    confirmation has been sent to your email.</p>
+                  <button id="careerModalDoneBtn" type="button"
+                    style="background:#28a745;color:#fff;border:none;border-radius:8px;padding:10px 36px;font-size:0.95rem;cursor:pointer;transition:background 150ms;"
+                    onmouseover="this.style.background='#218838'"
+                    onmouseout="this.style.background='#28a745'">Close</button>
+                </div>
+                <p id="careerSavingStatus" style="display:none;font-size:0.75rem;color:#999;margin:16px 0 0;"></p>
+              </div>
+            </div>
+            <style>
+              @keyframes careerIconPop {
+                0% {
+                  transform: scale(.3);
+                  opacity: 0
+                }
+
+                50% {
+                  transform: scale(1.15)
+                }
+
+                100% {
+                  transform: scale(1);
+                  opacity: 1
+                }
+              }
+
+              @keyframes careerPulse {
+
+                0%,
+                100% {
+                  opacity: .5
+                }
+
+                50% {
+                  opacity: 1
+                }
+              }
+            </style>
           </div>
           <div class="col-12 col-lg-6 order-1 order-md-2">
             <h1 class="career-subtitle text-center">Career</h1>
@@ -939,7 +1116,8 @@
               Whether you're a certified nurse, caregiver, physiotherapist, or health attendant — if you have the heart
               to care, we want you with us.</p>
             <div class="d-flex flex-row mt-5">
-              <img src="https://homenursingservices.in/images/dp-icon-1.png" class="m-2">
+              <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1778171950/career-icons/dp-icon-1.png"
+                class="m-2" loading="lazy">
               <div>
                 <h3 class="text-left m-2 career-opportunity">Resident Nurses (Full time/Part time)</h3>
                 <hr
@@ -952,7 +1130,8 @@
                 Fresher’s & Experienced</p>
             </div>
             <div class="d-flex flex-row mt-1">
-              <img src="https://homenursingservices.in/images/dp-icon-2.png" class="m-2">
+              <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1778171915/career-icons/dp-icon-2.png"
+                class="m-2" loading="lazy">
               <div>
                 <h3 class="text-left m-2 career-opportunity">Care Takers (Full time/Part time)</h3>
                 <hr
@@ -965,7 +1144,8 @@
                 Qualification: Any Fresher’s & Experienced</p>
             </div>
             <div class="d-flex flex-row mt-1">
-              <img src="https://homenursingservices.in/images/dp-icon-3.png" class="m-2">
+              <img src="https://res.cloudinary.com/dalm1fvto/image/upload/v1778171917/career-icons/dp-icon-3.png"
+                class="m-2" loading="lazy">
               <div>
                 <h3 class="text-left m-2 career-opportunity">Physiotherapists(Full time/Part time)</h3>
                 <hr
@@ -1155,7 +1335,12 @@
           fill="currentColor" class="bi bi-c-circle me-2" viewBox="0 0 16 16">
           <path
             d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.146 4.992c-1.212 0-1.927.92-1.927 2.502v1.06c0 1.571.703 2.462 1.927 2.462.979 0 1.641-.586 1.729-1.418h1.295v.093c-.1 1.448-1.354 2.467-3.03 2.467-2.091 0-3.269-1.336-3.269-3.603V7.482c0-2.261 1.201-3.638 3.27-3.638 1.681 0 2.935 1.054 3.029 2.572v.088H9.875c-.088-.879-.768-1.512-1.729-1.512" />
-        </svg>Sajjalashree Home Nursing. All Rights Reserved.</h1>
+        </svg>&copy; 2026 Sajjalashree Home Nursing Services. All Rights Reserved.</h1>
+      <p style="text-align:center; margin-top:8px; font-size:13px;">
+        <a href="legal/privacy-policy.html" target="_blank" style="color:inherit;">Privacy Policy</a>
+        <span> | </span>
+        <a href="legal/terms.html" target="_blank" style="color:inherit;">Terms &amp; Conditions</a>
+      </p>
     </footer>
   </main>
   <div class="pop-overlay" id="enquiryPopup">

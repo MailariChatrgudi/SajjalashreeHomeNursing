@@ -9,3 +9,8 @@ Backend/.env
 # Public Directories
 public/
 Backend/public/
+
+# IDE / Temporary files
+.agents/
+graphify-out/
+images/temp/

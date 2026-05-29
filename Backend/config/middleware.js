@@ -11,21 +11,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    if (file.fieldname === 'photo') {
-      cb(null, path.join(__dirname, "../public/uploads/photos"))
-    } else if (file.fieldname === 'aadhar') {
-      cb(null, path.join(__dirname, "../public/uploads/aadhar"))
-    } else if (file.fieldname === 'certificate') {
-      cb(null, path.join(__dirname, "../public/uploads/certificate"))
-    }
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = `${Date.now()}${crypto.randomBytes(6).toString('hex')}`
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
-  }
-});
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage,

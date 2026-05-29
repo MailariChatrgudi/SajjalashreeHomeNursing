@@ -1,0 +1,13 @@
+# ── Fix 4: www to non-www 301 redirect ──────────────────────────────────────
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.sajjalashreehomenursingservices\.com [NC]
+RewriteRule ^(.*)$ https://sajjalashreehomenursingservices.com/$1 [R=301,L]
+
+# ── Fix 3: HTTP Security Headers ────────────────────────────────────────────
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "DENY"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
