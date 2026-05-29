@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
             careerSubmissionConfirmed = false;
 
             // Use eagerly-uploaded IDs directly — no Phase 1 needed
-            if (!careerUploadedIds.photo || !careerUploadedIds.aadhar || !careerUploadedIds.certificate) {
+            if (!careerUploadedIds.photo || !careerUploadedIds.aadhar) {
                   showCareerRecovery(formVals);
                   return;
             }
