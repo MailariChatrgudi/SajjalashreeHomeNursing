@@ -15,6 +15,9 @@ const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 const app = express();
 
+// FIX: Trust proxy is REQUIRED on Render, otherwise the load balancer's IP is rate-limited and blocks everyone!
+app.set('trust proxy', 1);
+
 // FIX 2 — Helmet: secure HTTP headers (CSP disabled — site uses CDN resources & inline styles)
 app.use(helmet({
   contentSecurityPolicy: false,        // CDNs: Bootstrap, FontAwesome, Google Fonts, emailjs
@@ -83,9 +86,13 @@ app.use(express.static(path.join(__dirname, "../Admin")))
 // FIX 1 — CORS: restrict to production domain only
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL   // production: restrict to domain only
+    ? [
+        process.env.FRONTEND_URL, 
+        'https://sajjalashreehomenursingservices.com', 
+        'https://www.sajjalashreehomenursingservices.com'
+      ].filter(Boolean)
     : true,                       // development: allow all (localhost)
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   credentials: true
 }))
 
