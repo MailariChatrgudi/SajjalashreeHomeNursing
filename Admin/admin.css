@@ -1591,6 +1591,35 @@ img {
     }
 }
 
+@keyframes slideUpCentered {
+    from {
+        transform: translateY(14px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Force Image Modal to ALWAYS be centered */
+#imgModal {
+    place-items: center;
+    padding: 15px;
+}
+#imgModal .modal-panel {
+    border-radius: var(--r-lg);
+    max-width: 700px;
+    background: #0a0c1c;
+    padding: 14px;
+    width: 100%;
+    max-height: 95vh;
+    animation: slideUpCentered .22s var(--ease);
+}
+#imgModal .modal-panel::before {
+    display: none; /* Hide drag pill on mobile */
+}
+
 /* Desktop: centred modal */
 @media (min-width: 640px) {
     .modal-overlay {
@@ -1628,13 +1657,6 @@ img {
         max-width: 880px;
         height: 88vh;
         max-height: 88vh;
-    }
-
-    .modal-img {
-        max-width: 700px;
-        background: #0a0c1c;
-        border-radius: var(--r-lg);
-        padding: 14px;
     }
 }
 

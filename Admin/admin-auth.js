@@ -4,9 +4,10 @@
    ================================================================ */
 
 // Auto-detect backend URL
-const AUTH_API_BASE = window.location.hostname.includes('github.io')
-  ? 'https://sajjalashreehomenursing.onrender.com'
-  : '';
+const AUTH_API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:3000'
+    : 'https://sajjalashreehomenursing.onrender.com';
+
 
 /**
  * Check if user is authenticated and token is still valid

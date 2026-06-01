@@ -1,18 +1,18 @@
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 require('dotenv').config();
 
-// Gmail configuration - Use environment variables
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
-  requireTLS: true,
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS
-  },
-  family: 4
-});
+// Create resend instance only if key exists to prevent startup crash on Render
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+const FROM_EMAIL = process.env.EMAIL_FROM || 'noreply@mydomain.com';
+
+const sendEmailSafe = async (mailOptions) => {
+  if (!resend) {
+    console.error('RESEND_API_KEY is not configured! Email was not sent.');
+    return false;
+  }
+  await resend.emails.send(mailOptions);
+  return true;
+};
 
 /**
  * Send confirmation email to applicant
@@ -20,7 +20,7 @@ const transporter = nodemailer.createTransport({
 async function sendApplicantEmail(applicantName, applicantEmail, applicationId) {
   try {
     const mailOptions = {
-      from: process.env.GMAIL_USER,
+      from: FROM_EMAIL,
       to: applicantEmail,
       subject: 'Application Received - Nursing Service',
       html: `
@@ -54,7 +54,7 @@ async function sendApplicantEmail(applicantName, applicantEmail, applicationId) 
       `
     };
 
-    await transporter.sendMail(mailOptions);
+    await sendEmailSafe(mailOptions);
     console.log(`Applicant email sent to ${applicantEmail}`);
     return true;
   } catch (error) {
@@ -71,7 +71,7 @@ async function sendAdminEmail(applicantData) {
     const adminEmail = process.env.ADMIN_EMAIL;
 
     const mailOptions = {
-      from: process.env.GMAIL_USER,
+      from: FROM_EMAIL,
       to: adminEmail,
       subject: `New Application Received: ${applicantData.name}`,
       html: `
@@ -124,7 +124,7 @@ async function sendAdminEmail(applicantData) {
       `
     };
 
-    await transporter.sendMail(mailOptions);
+    await sendEmailSafe(mailOptions);
     console.log(`Admin email sent to ${adminEmail}`);
     return true;
   } catch (error) {
@@ -140,7 +140,7 @@ async function sendGeneralEnquiryAlert(enquiry) {
   try {
     const adminEmail = process.env.ADMIN_EMAIL;
     const mailOptions = {
-      from: process.env.GMAIL_USER,
+      from: FROM_EMAIL,
       to: adminEmail,
       subject: `New General Enquiry from ${enquiry.name}`,
       html: `
@@ -161,7 +161,7 @@ async function sendGeneralEnquiryAlert(enquiry) {
         </div>
       `
     };
-    await transporter.sendMail(mailOptions);
+    await sendEmailSafe(mailOptions);
     console.log(`General enquiry alert sent to ${adminEmail}`);
     return true;
   } catch (error) {
@@ -177,7 +177,7 @@ async function sendProductEnquiryAlert(enquiry) {
   try {
     const adminEmail = process.env.ADMIN_EMAIL;
     const mailOptions = {
-      from: process.env.GMAIL_USER,
+      from: FROM_EMAIL,
       to: adminEmail,
       subject: `Product Enquiry: ${enquiry.product_name}`,
       html: `
@@ -198,7 +198,7 @@ async function sendProductEnquiryAlert(enquiry) {
         </div>
       `
     };
-    await transporter.sendMail(mailOptions);
+    await sendEmailSafe(mailOptions);
     console.log(`Product enquiry alert sent to ${adminEmail}`);
     return true;
   } catch (error) {
@@ -213,7 +213,7 @@ async function sendProductEnquiryAlert(enquiry) {
 async function sendPasswordResetOtpEmail(adminEmail, adminName, otp) {
   try {
     const mailOptions = {
-      from: process.env.GMAIL_USER,
+      from: FROM_EMAIL,
       to: adminEmail,
       subject: 'Password Reset Verification Code - Nursing Service',
       html: `
@@ -243,7 +243,7 @@ async function sendPasswordResetOtpEmail(adminEmail, adminName, otp) {
         </div>
       `
     };
-    await transporter.sendMail(mailOptions);
+    await sendEmailSafe(mailOptions);
     console.log(`Password reset OTP sent to ${adminEmail}`);
     return true;
   } catch (error) {
@@ -264,7 +264,7 @@ async function sendCallBackEmail(phone) {
     }
 
     const mailOptions = {
-      from: process.env.GMAIL_USER,
+      from: FROM_EMAIL,
       to: adminEmail,
       subject: 'New Call Back Request - Sajjalashree',
       html: `
@@ -288,7 +288,7 @@ async function sendCallBackEmail(phone) {
         </div>
       `
     };
-    await transporter.sendMail(mailOptions);
+    await sendEmailSafe(mailOptions);
     console.log(`Call back request email sent to admin for phone: ${phone}`);
     return true;
   } catch (error) {
@@ -303,7 +303,6 @@ module.exports = {
   sendGeneralEnquiryAlert,
   sendPasswordResetOtpEmail,
   sendProductEnquiryAlert,
-  sendCallBackEmail,
-  transporter
+  sendCallBackEmail
 };
 
