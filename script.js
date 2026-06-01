@@ -661,47 +661,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // Background submission with retries
             await submitCareerBackground(formVals);
       })
-      // --- General Enquiry Form Handler ---
-      const generalEnquiryForm = document.getElementById('enquiry-form');
-      if (generalEnquiryForm) {
-            generalEnquiryForm.addEventListener('submit', async (e) => {
-                  e.preventDefault();
-                  const btn = generalEnquiryForm.querySelector('button[type="submit"]');
-                  if (btn) {
-                        btn.disabled = true;
-                        const originalBtnHTML = btn.innerHTML;
-                        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submitting...`;
-                  }
-                  const from_name = generalEnquiryForm.from_name.value.trim();
-                  const from_email = generalEnquiryForm.from_email.value.trim();
-                  const phone = generalEnquiryForm.phone.value.trim();
-                  try {
-                        const response = await fetch(`${API_BASE}/enquiry`, {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ from_name, from_email, phone })
-                        });
-                        const data = await response.json();
-                        if (data.success) {
-                              showToast('Enquiry submitted successfully!', 'success');
-                              generalEnquiryForm.reset();
-                        } else if (data.errors) {
-                              showToast(Object.values(data.errors).join(' | '), 'error');
-                        } else {
-                              showToast(data.message || 'Submission failed.', 'error');
-                        }
-                  } catch (err) {
-                        showToast('Network error. Please try again.', 'error');
-                  } finally {
-                        if (btn) {
-                              btn.disabled = false;
-                              btn.innerHTML = 'Submit';
-                        }
-                  }
-            });
-      }
-
-      // --- Product Enquiry Forms Handler ---
       function setEnquiryBtnState(btn, state) {
             if (!btn) return;
             if (state === 'loading') {
@@ -717,9 +676,60 @@ document.addEventListener('DOMContentLoaded', function () {
                   btn.disabled = false;
                   btn.style.opacity = '1';
                   btn.style.backgroundColor = '';
-                  btn.innerHTML = 'Send Enquiry';
+                  // Fallback for general buttons if they are just called "Submit"
+                  btn.innerHTML = btn.getAttribute('data-original-text') || 'Send Enquiry';
             }
       }
+
+      // --- General Enquiry Form Handler ---
+      const generalEnquiryForm = document.getElementById('enquiry-form');
+      if (generalEnquiryForm) {
+            generalEnquiryForm.addEventListener('submit', async (e) => {
+                  e.preventDefault();
+                  const btn = generalEnquiryForm.querySelector('button[type="submit"]');
+                  if (btn && !btn.hasAttribute('data-original-text')) {
+                        btn.setAttribute('data-original-text', btn.innerHTML);
+                  }
+                  setEnquiryBtnState(btn, 'loading');
+
+                  const from_name = generalEnquiryForm.from_name.value.trim();
+                  const from_email = generalEnquiryForm.from_email.value.trim();
+                  const phone = generalEnquiryForm.phone.value.trim();
+                  try {
+                        const response = await fetch(`${API_BASE}/enquiry`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ from_name, from_email, phone })
+                        });
+                        const data = await response.json();
+                        if (data.success) {
+                              setEnquiryBtnState(btn, 'success');
+                              showToast('Enquiry submitted successfully!', 'success');
+                              setTimeout(() => {
+                                    setEnquiryBtnState(btn, 'reset');
+                                    generalEnquiryForm.reset();
+                                    const modalElement = generalEnquiryForm.closest('.modal');
+                                    if (modalElement) {
+                                          const modalInstance = bootstrap.Modal.getInstance(modalElement) || new bootstrap.Modal(modalElement);
+                                          if (modalInstance) modalInstance.hide();
+                                    }
+                              }, 1500);
+                        } else if (data.errors) {
+                              showToast(Object.values(data.errors).join(' | '), 'error');
+                              setEnquiryBtnState(btn, 'reset');
+                        } else {
+                              showToast(data.message || 'Submission failed.', 'error');
+                              setEnquiryBtnState(btn, 'reset');
+                        }
+                  } catch (err) {
+                        showToast('Network error. Please try again.', 'error');
+                        setEnquiryBtnState(btn, 'reset');
+                  }
+            });
+      }
+
+      // --- Product Enquiry Forms Handler ---
+
 
       const productEnquiryForms = document.querySelectorAll("form[id$='-enquiry'][data-product]");
       productEnquiryForms.forEach(form => {
