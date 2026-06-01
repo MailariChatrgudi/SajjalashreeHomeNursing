@@ -763,26 +763,29 @@ async function handleCareerApplicationApply(req, res, next) {
             connection.release();
         }
 
-        try {
-            await sendApplicantEmail(trimmedName, trimmedEmail, applicationId);
-            await sendAdminEmail({
-                name: trimmedName,
-                email: trimmedEmail,
-                phone: trimmedPhone,
-                experience: trimmedExperience,
-                message: trimmedMessage
-            });
-        } catch (emailErr) {
-            console.error('Application email phase failed:', emailErr);
-        }
-
         const successResponse = { success: true, message: 'Application submitted successfully' };
         idempotencyStore.set(idempotencyKey, {
             status: 200,
             response: successResponse,
             timestamp: Date.now()
         });
-        return res.status(200).json(successResponse);
+        res.status(200).json(successResponse);
+
+        // Process emails asynchronously in the background so they don't block the frontend
+        Promise.all([
+            sendApplicantEmail(trimmedName, trimmedEmail, applicationId),
+            sendAdminEmail({
+                name: trimmedName,
+                email: trimmedEmail,
+                phone: trimmedPhone,
+                experience: trimmedExperience,
+                message: trimmedMessage
+            })
+        ]).catch(emailErr => {
+            console.error('Application email phase failed:', emailErr);
+        });
+
+
     } catch (e) {
         if (req.headers['idempotency-key']) {
             idempotencyStore.delete(req.headers['idempotency-key']);
