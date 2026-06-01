@@ -70,6 +70,8 @@
       border: 1px solid rgba(255,255,255,0.3);
       transition: background 0.2s;
       white-space: nowrap;
+      cursor: pointer;
+      line-height: 1;
     }
     .site-nav .back-link:hover { background: rgba(255,255,255,0.3); }
 
@@ -255,7 +257,7 @@
 <nav class="site-nav">
   <div class="nav-inner">
     <a href="../index.html" class="brand">Sajjalashree Home Nursing Services</a>
-    <a href="../index.html" class="back-link">← Back to Home</a>
+    <button onclick="if(window.opener){window.close();}else if(window.history.length>1){window.history.back();}else{window.location.href='../index.html';}" class="back-link" type="button">← Back</button>
   </div>
 </nav>
 
