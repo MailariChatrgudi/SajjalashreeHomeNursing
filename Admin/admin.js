@@ -40,10 +40,12 @@ const API = {
 };
 
 const FILES = {
-  base: `${API_BASE}/admin/file`,
-  photos: 'photos',
-  aadhar: 'aadhar',
-  certificate: 'certificate',
+  base:         `${API_BASE}/admin/file`,
+  photos:       'photos',
+  aadhar:       'aadhar',
+  aadhar_front: 'aadhar_front',  // new
+  aadhar_back:  'aadhar_back',   // new
+  certificate:  'certificate',
 };
 
 // Cache blob URLs to avoid re-fetching the same file repeatedly
@@ -531,11 +533,12 @@ function renderTable(apps) {
   apps.forEach((app, idx) => {
     const id = app.id || idx;
     const status = normalizeStatus(app.status);
-    const photoFile = app.photo || null;
-    const aadharFile = app.aadhar_card || null;
-    const certFile = app.certificate || null;
-    const initials = getInitials(app.full_name);
-    const aadharType = aadharFile ? aadharFile.split('.').pop().toLowerCase() : '';
+    const photoFile       = app.photo || null;
+    // Support new aadhar_front column with fallback to legacy aadhar_card
+    const aadharFrontFile = app.aadhar_front || app.aadhar_card || null;
+    const certFile        = app.certificate || null;
+    const initials        = getInitials(app.full_name);
+    const aadharFrontType = aadharFrontFile ? aadharFrontFile.split('.').pop().toLowerCase() : '';
 
     const tr = document.createElement('tr');
     tr.dataset.id = id;
@@ -570,14 +573,20 @@ function renderTable(apps) {
 
       <td data-label="Photo">${thumbCellProtected(FILES.photos, photoFile, 'Photo', `previewProtectedImg('${FILES.photos}','${escHtml(photoFile || '')}','Photo — ${escHtml(app.full_name || '')}')`, 'fa-image')}</td>
 
-      ${(aadharType === "jpg" || aadharType === "jpeg" || aadharType === "png") ?
-        `<td data-label="Aadhaar">${thumbCellProtected(FILES.aadhar, aadharFile, 'Aadhaar', `previewProtectedImg('${FILES.aadhar}','${escHtml(aadharFile || '')}','Aadhaar — ${escHtml(app.full_name || '')}')`, 'fa-id-card')}</td>`
-        : (aadharType === 'pdf') ?
-          `<td data-label="Aadhaar">${fileActionsProtected(FILES.aadhar, aadharFile, 'Aadhaar')}</td>` :
-          `<td data-label="Aadhaar"><span class="no-file"><i class="fa-solid fa-file-slash"></i> N/A</span></td>`
-      }
+      <td data-label="Aadhaar">${thumbCellProtected(
+        app.aadhar_front ? FILES.aadhar_front : FILES.aadhar,
+        aadharFrontFile,
+        'Aadhaar Front',
+        `previewProtectedImg('${app.aadhar_front ? FILES.aadhar_front : FILES.aadhar}','${escHtml(aadharFrontFile || '')}','Aadhaar — ${escHtml(app.full_name || '')}')`,
+        'fa-id-card'
+      )}</td>
 
-      <td data-label="Certificate">${fileActionsProtected(FILES.certificate, certFile, 'Certificate')}</td>
+      <td data-label="Certificate">${certFile
+        ? thumbCellProtected(FILES.certificate, certFile, 'Certificate',
+            `previewProtectedImg('${FILES.certificate}','${escHtml(certFile || '')}','Certificate — ${escHtml(app.full_name || '')}')`,
+            'fa-certificate')
+        : `<span class="no-file"><i class="fa-solid fa-file-slash"></i> N/A</span>`
+      }</td>
 
       <td data-label="Status">
         <span class="status-badge ${status.toLowerCase()}" id="badge-${id}">
@@ -826,10 +835,11 @@ function openViewModal(id) {
   if (!app) return;
 
   const status = normalizeStatus(app.status);
-  const photoFile = app.photo || null;
-  const aadharFile = app.aadhar_card || null;
-  const certFile = app.certificate || null;
-  const aadharType = aadharFile ? aadharFile.split('.').pop().toLowerCase() : '';
+  const photoFile   = app.photo || null;
+  // Support new aadhar_front/back columns with fallback to legacy aadhar_card
+  const aadharFrontFile = app.aadhar_front || app.aadhar_card || null;
+  const aadharBackFile  = app.aadhar_back  || null;
+  const certFile    = app.certificate || null;
 
   const body = document.getElementById('viewModalBody');
   if (!body) return;
@@ -896,46 +906,60 @@ function openViewModal(id) {
           data-file-folder="${escHtml(FILES.photos)}"
           data-file-name="${escHtml(photoFile)}"
           alt="Photo"
-          onclick="previewProtectedImg('${FILES.photos}','${escHtml(photoFile)}','Photo — ${escHtml(app.full_name || '')}')"
+          onclick="previewProtectedImg('${FILES.photos}','${escHtml(photoFile)}','Photo \u2014 ${escHtml(app.full_name || '')}')"
           onerror="this.outerHTML='<p style=color:var(--txt-3)>Not available</p>'"
         />
       </div>` : ''}
 
-      ${(aadharFile && (aadharType === "jpg" || aadharType === "jpeg" || aadharType === "png")) ? `
+      ${aadharFrontFile ? `
       <div class="detail-field">
-        <span class="detail-label">Aadhaar</span>
+        <span class="detail-label">Aadhaar &mdash; Front</span>
         <img
           class="detail-img"
           src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
-          data-file-folder="${escHtml(FILES.aadhar)}"
-          data-file-name="${escHtml(aadharFile)}"
-          alt="Aadhaar"
-          onclick="previewProtectedImg('${FILES.aadhar}','${escHtml(aadharFile)}','Aadhaar — ${escHtml(app.full_name || '')}')"
+          data-file-folder="${escHtml(app.aadhar_front ? FILES.aadhar_front : FILES.aadhar)}"
+          data-file-name="${escHtml(aadharFrontFile)}"
+          alt="Aadhaar Front"
+          onclick="previewProtectedImg('${app.aadhar_front ? FILES.aadhar_front : FILES.aadhar}','${escHtml(aadharFrontFile)}','Aadhaar Front \u2014 ${escHtml(app.full_name || '')}')"
           onerror="this.outerHTML='<p style=color:var(--txt-3)>Not available</p>'"
         />
-      </div>` : (aadharFile && aadharType === 'pdf') ? `
+      </div>` : ''}
+
+      ${aadharBackFile ? `
       <div class="detail-field">
-        <span class="detail-label">Aadhaar</span>
-        <div class="file-actions" style="margin-top:4px;">
-          <button class="btn btn-sm btn-outline" onclick="openProtectedPdfViewer('${FILES.aadhar}','${escHtml(aadharFile)}','Aadhaar')">
-            <i class="fa-solid fa-file-pdf"></i> View PDF
-          </button>
-          <button class="btn btn-sm btn-primary" onclick="downloadProtectedFile('${FILES.aadhar}','${escHtml(aadharFile)}','Aadhaar')">
-            <i class="fa-solid fa-download"></i> Download
-          </button>
-        </div>
+        <span class="detail-label">Aadhaar &mdash; Back</span>
+        <img
+          class="detail-img"
+          src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+          data-file-folder="${escHtml(FILES.aadhar_back)}"
+          data-file-name="${escHtml(aadharBackFile)}"
+          alt="Aadhaar Back"
+          onclick="previewProtectedImg('${FILES.aadhar_back}','${escHtml(aadharBackFile)}','Aadhaar Back \u2014 ${escHtml(app.full_name || '')}')"
+          onerror="this.outerHTML='<p style=color:var(--txt-3)>Not available</p>'"
+        />
       </div>` : ''}
 
       ${certFile ? `
       <div class="detail-field">
         <span class="detail-label">Certificate</span>
-        <div class="file-actions" style="margin-top:4px;">
-          <button class="btn btn-sm btn-outline" onclick="openProtectedPdfViewer('${FILES.certificate}','${escHtml(certFile)}','Certificate')">
-            <i class="fa-solid fa-file-pdf"></i> View PDF
-          </button>
-          <button class="btn btn-sm btn-primary" onclick="downloadProtectedFile('${FILES.certificate}','${escHtml(certFile)}','Certificate')">
-            <i class="fa-solid fa-download"></i> Download
-          </button>
+        <img
+          class="detail-img"
+          src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+          data-file-folder="${escHtml(FILES.certificate)}"
+          data-file-name="${escHtml(certFile)}"
+          alt="Certificate"
+          onclick="previewProtectedImg('${FILES.certificate}','${escHtml(certFile)}','Certificate \u2014 ${escHtml(app.full_name || '')}')"
+          onerror="this.outerHTML='<p style=color:var(--txt-3)>Not available</p>'"
+        />
+      </div>` : ''}
+
+      ${app.emergency_contact_name ? `
+      <div class="detail-section-title" style="margin-top:20px;">Emergency Contact</div>
+      <div class="detail-field" style="padding:14px;background:#fff8e8;border-left:4px solid #c9a84c;border-radius:8px;">
+        <div style="font-size:0.88rem;color:#555;">
+          <p style="margin:4px 0;"><strong>Name:</strong> ${escHtml(app.emergency_contact_name)}</p>
+          <p style="margin:4px 0;"><strong>Phone:</strong> <a href="tel:${escHtml(app.emergency_contact_phone || '')}" style="color:#4f46e5;font-weight:600;">${escHtml(app.emergency_contact_phone || '\u2014')}</a></p>
+          <p style="margin:4px 0;"><strong>Relation:</strong> ${escHtml(app.emergency_contact_relation || '\u2014')}</p>
         </div>
       </div>` : ''}
 

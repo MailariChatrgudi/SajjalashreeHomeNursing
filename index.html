@@ -939,15 +939,98 @@
                   <p id="PhotoErorrMsg" style="font:12px; color: red; display: none;"></p>
                 </div>
                 <div class="form-group mb-2">
-                  <label for="adhar" class="form-label">Upload Your Adhar(Front And Back)</label>
-                  <input type="file" class="form-control" id="adhar" name="aadhar" accept=".jpg,.jpeg,.png" required>
-                  <p id="aadharErorrMsg" style="font:12px; color: red; display: none;"></p>
+                  <label for="career-aadhar-front" class="form-label">
+                    Aadhaar Card &mdash; Front Side
+                    <span style="color:#e53e3e;">*</span>
+                  </label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    name="aadhar_front"
+                    id="career-aadhar-front"
+                    accept=".jpg,.jpeg,.png"
+                    required
+                  >
+                  <small style="color:#888;font-size:12px;">JPG or PNG only &mdash; max 5MB</small>
+                  <div id="aadharFrontStatus" class="file-status"></div>
+                  <p id="aadharFrontErorrMsg" style="font:12px; color: red; display: none;"></p>
                 </div>
                 <div class="form-group mb-2">
-                  <label for="certificate" class="form-label">Others (Certificate)</label>
-                  <input type="file" class="form-control" id="certificate" name="certificate"
-                    placeholder="upload Certificates if you are nurshing or JNM" accept=".pdf">
+                  <label for="career-aadhar-back" class="form-label">
+                    Aadhaar Card &mdash; Back Side
+                    <span style="color:#e53e3e;">*</span>
+                  </label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    name="aadhar_back"
+                    id="career-aadhar-back"
+                    accept=".jpg,.jpeg,.png"
+                    required
+                  >
+                  <small style="color:#888;font-size:12px;">JPG or PNG only &mdash; max 5MB</small>
+                  <div id="aadharBackStatus" class="file-status"></div>
+                  <p id="aadharBackErorrMsg" style="font:12px; color: red; display: none;"></p>
+                </div>
+                <div class="form-group mb-2">
+                  <label for="career-certificate" class="form-label">Others (Certificate)</label>
+                  <input type="file" class="form-control" id="career-certificate" name="certificate"
+                    placeholder="Upload certificates if you are nursing or JNM" accept=".jpg,.jpeg,.png">
+                  <small style="color:#888;font-size:12px;">JPG or PNG only &mdash; max 5MB</small>
                   <p id="cetificateErorrMsg" style="font:12px; color: red; display: none;"></p>
+                </div>
+              </div>
+
+              <!-- Emergency Contact Section -->
+              <div class="col-12">
+                <div class="form-section-divider"
+                  style="margin:24px 0 16px;border-top:1px solid #e2e8f0;padding-top:20px;">
+                  <h4 style="font-size:0.95rem;color:#555;font-weight:600;margin:0 0 4px;">
+                    Emergency Contact
+                  </h4>
+                  <p style="font-size:0.82rem;color:#888;margin:0 0 16px;">
+                    Person to contact in case of emergency
+                  </p>
+                </div>
+                <div class="form-group mb-2">
+                  <label for="emergency-contact-name" class="form-label">Contact Person Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="emergency-contact-name"
+                    name="emergency_contact_name"
+                    placeholder="e.g. Ramesh Kumar"
+                    maxlength="100"
+                  >
+                  <p id="emergencyNameErorrMsg" style="font:12px; color: red; display: none;"></p>
+                </div>
+                <div class="form-group mb-2">
+                  <label for="emergency-contact-phone" class="form-label">Contact Person Mobile Number</label>
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="emergency-contact-phone"
+                    name="emergency_contact_phone"
+                    placeholder="10-digit mobile number"
+                    maxlength="15"
+                  >
+                  <p id="emergencyPhoneErorrMsg" style="font:12px; color: red; display: none;"></p>
+                </div>
+                <div class="form-group mb-2">
+                  <label for="emergency-contact-relation" class="form-label">Relationship</label>
+                  <select class="form-control" id="emergency-contact-relation" name="emergency_contact_relation">
+                    <option value="">&mdash; Select Relationship &mdash;</option>
+                    <option value="Father">Father</option>
+                    <option value="Mother">Mother</option>
+                    <option value="Spouse">Spouse</option>
+                    <option value="Sibling">Sibling</option>
+                    <option value="Son">Son</option>
+                    <option value="Daughter">Daughter</option>
+                    <option value="Relative">Relative</option>
+                    <option value="Friend">Friend</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <p id="emergencyRelationErorrMsg" style="font:12px; color: red; display: none;"></p>
                 </div>
               </div>
 

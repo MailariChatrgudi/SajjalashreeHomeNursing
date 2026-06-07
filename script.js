@@ -46,20 +46,22 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const fileValidator = {
-            photo: { types: ["image/jpeg", "image/png"] },
-            aadhar: { types: ["image/jpeg", "image/png", 'application/pdf'] },
-            certificate: { types: ['application/pdf'] }
+            photo:        { types: ["image/jpeg", "image/png"] },
+            aadhar_front: { types: ["image/jpeg", "image/png"] }, // new
+            aadhar_back:  { types: ["image/jpeg", "image/png"] }, // new
+            certificate:  { types: ["image/jpeg", "image/png"] }  // PDF removed
       }
 
       const errorId = {
-            name: 'nameErorrMsg',
-            phone: 'phoneErorrMsg',
-            email: 'emailErorrMsg',
-            experience: 'expErorrMsg',
-            message: 'msgErorrMsg',
-            photo: 'PhotoErorrMsg',
-            aadhar: 'aadharErorrMsg',
-            certificate: 'cetificateErorrMsg',
+            name:         'nameErorrMsg',
+            phone:        'phoneErorrMsg',
+            email:        'emailErorrMsg',
+            experience:   'expErorrMsg',
+            message:      'msgErorrMsg',
+            photo:        'PhotoErorrMsg',
+            aadhar_front: 'aadharFrontErorrMsg', // new
+            aadhar_back:  'aadharBackErorrMsg',  // new
+            certificate:  'cetificateErorrMsg',
       }
       const formInputValidation = (input) => {
             const inputType = input.name
@@ -95,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const fieldEvents = {
             name: 'input', phone: 'input', email: 'blur',
             experience: 'blur', message: 'blur',
-            photo: 'change', aadhar: 'change', certificate: 'change',
+            photo: 'change', aadhar_front: 'change', aadhar_back: 'change', certificate: 'change',
       };
 
       const setupCharCounter = (inputId, counterId, max = 500) => {
@@ -143,9 +145,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // === Career Modal State ===
       let careerFormIdempotencyKey = crypto.randomUUID();
-      const careerUploadedIds = { photo: null, aadhar: null, certificate: null };
-      const careerUploadedTypes = { photo: null, aadhar: null, certificate: null };
-      const careerUploadedFilenames = { photo: null, aadhar: null, certificate: null };
+      const careerUploadedIds = { photo: null, aadhar_front: null, aadhar_back: null, certificate: null };
+      const careerUploadedTypes = { photo: null, aadhar_front: null, aadhar_back: null, certificate: null };
+      const careerUploadedFilenames = { photo: null, aadhar_front: null, aadhar_back: null, certificate: null };
       let careerSubmissionConfirmed = false;
 
       // === Career Modal Helpers ===
@@ -275,25 +277,33 @@ document.addEventListener('DOMContentLoaded', function () {
                   document.getElementById('experience').value = '';
                   document.getElementById('message').value = '';
 
-                  // ── Reset all 3 file inputs ──
+                  // ── Reset all file inputs ──
                   document.getElementById('resume').value = '';
-                  document.getElementById('adhar').value = '';
-                  document.getElementById('certificate').value = '';
+                  document.getElementById('career-aadhar-front').value = '';
+                  document.getElementById('career-aadhar-back').value  = '';
+                  document.getElementById('career-certificate').value = '';
+                  document.getElementById('emergency-contact-name').value     = '';
+                  document.getElementById('emergency-contact-phone').value    = '';
+                  document.getElementById('emergency-contact-relation').value = '';
 
                   // ── Reset uploaded IDs and types ──
                   careerUploadedIds.photo = null;
-                  careerUploadedIds.aadhar = null;
+                  careerUploadedIds.aadhar_front = null;
+                  careerUploadedIds.aadhar_back  = null;
                   careerUploadedIds.certificate = null;
                   careerUploadedTypes.photo = null;
-                  careerUploadedTypes.aadhar = null;
+                  careerUploadedTypes.aadhar_front = null;
+                  careerUploadedTypes.aadhar_back  = null;
                   careerUploadedTypes.certificate = null;
                   careerUploadedFilenames.photo = null;
-                  careerUploadedFilenames.aadhar = null;
+                  careerUploadedFilenames.aadhar_front = null;
+                  careerUploadedFilenames.aadhar_back  = null;
                   careerUploadedFilenames.certificate = null;
 
                   // ── Reset all file status indicators to idle ──
                   setFileStatus('photo', 'idle');
-                  setFileStatus('aadhar', 'idle');
+                  setFileStatus('aadhar_front', 'idle');
+                  setFileStatus('aadhar_back',  'idle');
                   setFileStatus('certificate', 'idle');
 
                   // ── Uncheck consent checkbox ──
@@ -309,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
                   }
 
                   // ── Clear all inline validation errors ──
-                  ['nameErorrMsg', 'phoneErorrMsg', 'emailErorrMsg', 'expErorrMsg', 'msgErorrMsg', 'PhotoErorrMsg', 'aadharErorrMsg', 'cetificateErorrMsg'].forEach(id => {
+                  ['nameErorrMsg', 'phoneErorrMsg', 'emailErorrMsg', 'expErorrMsg', 'msgErorrMsg', 'PhotoErorrMsg', 'aadharFrontErorrMsg', 'aadharBackErorrMsg', 'cetificateErorrMsg'].forEach(id => {
                         const el = document.getElementById(id);
                         if (el) {
                               el.textContent = '';
@@ -353,15 +363,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Map: fieldname -> status indicator element ID
       var fileStatusIds = {
-            photo: 'uploadStatus_photo',
-            aadhar: 'uploadStatus_aadhar',
-            certificate: 'uploadStatus_certificate',
+            photo:        'uploadStatus_photo',
+            aadhar_front: 'aadharFrontStatus',
+            aadhar_back:  'aadharBackStatus',
+            certificate:  'uploadStatus_certificate',
       };
       // Map: input element ID -> fieldname
       var inputFieldMap = {
-            resume: 'photo',
-            adhar: 'aadhar',
-            certificate: 'certificate',
+            resume:            'photo',
+            'career-aadhar-front': 'aadhar_front',
+            'career-aadhar-back':  'aadhar_back',
+            'career-certificate':  'certificate',
       };
 
       // Create or get the status <p> element below each file input
@@ -374,9 +386,10 @@ document.addEventListener('DOMContentLoaded', function () {
                   el.style.cssText = 'font-size:12px; margin-top:4px; margin-bottom:0;';
                   // Insert after the error message paragraph for this field
                   var errorElId = {
-                        photo: 'PhotoErorrMsg',
-                        aadhar: 'aadharErorrMsg',
-                        certificate: 'cetificateErorrMsg'
+                        photo:        'PhotoErorrMsg',
+                        aadhar_front: 'aadharFrontErorrMsg',
+                        aadhar_back:  'aadharBackErorrMsg',
+                        certificate:  'cetificateErorrMsg'
                   }[fieldname];
                   var errEl = document.getElementById(errorElId);
                   if (errEl && errEl.parentNode) errEl.parentNode.insertBefore(el, errEl.nextSibling);
@@ -415,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var cb = document.getElementById('consentSingle');
             if (!btn) return;
 
-            var allFilesUploaded = !!(careerUploadedIds.photo && careerUploadedIds.aadhar);
+            var allFilesUploaded = !!(careerUploadedIds.photo && careerUploadedIds.aadhar_front && careerUploadedIds.aadhar_back);
             var isConsentChecked = cb ? cb.checked : false;
 
             if (allFilesUploaded && isConsentChecked) {
@@ -475,7 +488,12 @@ document.addEventListener('DOMContentLoaded', function () {
             careerUploadedIds[fieldname] = null;
             updateCareerSubmitButton();
             // Find and reset the input
-            var inputId = fieldname === 'photo' ? 'resume' : (fieldname === 'aadhar' ? 'adhar' : 'certificate');
+            var inputId = {
+                  photo:        'resume',
+                  aadhar_front: 'career-aadhar-front',
+                  aadhar_back:  'career-aadhar-back',
+                  certificate:  'career-certificate'
+            }[fieldname];
             var inputEl = document.getElementById(inputId);
             if (!inputEl) return;
             // Reset status to idle
@@ -515,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function () {
             careerSubmissionConfirmed = false;
 
             // Use eagerly-uploaded IDs directly — no Phase 1 needed
-            if (!careerUploadedIds.photo || !careerUploadedIds.aadhar) {
+            if (!careerUploadedIds.photo || !careerUploadedIds.aadhar_front || !careerUploadedIds.aadhar_back) {
                   showCareerRecovery(formVals);
                   return;
             }
@@ -527,15 +545,22 @@ document.addEventListener('DOMContentLoaded', function () {
                   phone: formVals.phone,
                   experience: formVals.experience,
                   message: formVals.message,
-                  photo_public_id: careerUploadedIds.photo,
-                  aadhar_public_id: careerUploadedIds.aadhar,
-                  certificate_public_id: careerUploadedIds.certificate,
-                  photo_resource_type: careerUploadedTypes.photo || 'raw',
-                  aadhar_resource_type: careerUploadedTypes.aadhar || 'raw',
-                  certificate_resource_type: careerUploadedTypes.certificate || 'raw',
-                  photo_filename: careerUploadedFilenames.photo,
-                  aadhar_filename: careerUploadedFilenames.aadhar,
-                  certificate_filename: careerUploadedFilenames.certificate
+                  photo_public_id:        careerUploadedIds.photo,
+                  aadhar_front_public_id: careerUploadedIds.aadhar_front,  // new
+                  aadhar_back_public_id:  careerUploadedIds.aadhar_back,   // new
+                  certificate_public_id:  careerUploadedIds.certificate,
+                  photo_resource_type:        careerUploadedTypes.photo || 'image',
+                  aadhar_front_resource_type: careerUploadedTypes.aadhar_front || 'image',
+                  aadhar_back_resource_type:  careerUploadedTypes.aadhar_back  || 'image',
+                  certificate_resource_type:  careerUploadedTypes.certificate  || 'image',
+                  photo_filename:        careerUploadedFilenames.photo,
+                  aadhar_front_filename: careerUploadedFilenames.aadhar_front, // new
+                  aadhar_back_filename:  careerUploadedFilenames.aadhar_back,  // new
+                  certificate_filename:  careerUploadedFilenames.certificate,
+                  // Emergency contact (optional)
+                  emergency_contact_name:     document.getElementById('emergency-contact-name')?.value.trim() || null,
+                  emergency_contact_phone:    document.getElementById('emergency-contact-phone')?.value.trim() || null,
+                  emergency_contact_relation: document.getElementById('emergency-contact-relation')?.value || null,
             };
 
             for (var attempt = 1; attempt <= MAX; attempt++) {
@@ -569,9 +594,10 @@ document.addEventListener('DOMContentLoaded', function () {
                               closeCareerModal();
                               careerForm.style.display = '';
                               showToast('Some files could not be verified. Please re-upload the highlighted files.', 'error');
-                              if (data.missing.photo) { showError(errorId.photo, 'Please re-upload your photo'); careerUploadedIds.photo = null; setFileStatus('photo', 'idle'); }
-                              if (data.missing.aadhar) { showError(errorId.aadhar, 'Please re-upload your Aadhaar'); careerUploadedIds.aadhar = null; setFileStatus('aadhar', 'idle'); }
-                              if (data.missing.certificate) { showError(errorId.certificate, 'Please re-upload your certificate'); careerUploadedIds.certificate = null; setFileStatus('certificate', 'idle'); }
+                              if (data.missing.photo)        { showError(errorId.photo,        'Please re-upload your photo');         careerUploadedIds.photo = null;        setFileStatus('photo', 'idle'); }
+                              if (data.missing.aadhar_front) { showError(errorId.aadhar_front,  'Aadhaar front missing — please re-upload'); careerUploadedIds.aadhar_front = null; setFileStatus('aadhar_front', 'idle'); }
+                              if (data.missing.aadhar_back)  { showError(errorId.aadhar_back,   'Aadhaar back missing — please re-upload');  careerUploadedIds.aadhar_back  = null; setFileStatus('aadhar_back', 'idle'); }
+                              if (data.missing.certificate)  { showError(errorId.certificate,   'Please re-upload your certificate');   careerUploadedIds.certificate = null; setFileStatus('certificate', 'idle'); }
                               updateCareerSubmitButton();
                               return;
                         }
@@ -641,12 +667,17 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             // Validate that all required files were eagerly uploaded
-            if (!careerUploadedIds.photo || !careerUploadedIds.aadhar) {
+            const missingFiles = [];
+            if (!careerUploadedIds.photo)        missingFiles.push('photo');
+            if (!careerUploadedIds.aadhar_front) missingFiles.push('aadhar_front'); // new
+            if (!careerUploadedIds.aadhar_back)  missingFiles.push('aadhar_back');  // new
+
+            if (missingFiles.length > 0) {
                   btn.disabled = false;
                   btn.innerHTML = originalBtnHTML;
-                  // Show error for any required file that wasn't uploaded
-                  if (!careerUploadedIds.photo) showError(errorId.photo, '*Please upload your photo and wait for it to finish uploading');
-                  if (!careerUploadedIds.aadhar) showError(errorId.aadhar, '*Please upload your Aadhaar and wait for it to finish uploading');
+                  missingFiles.forEach(function(f) {
+                        showError(errorId[f], '*Please upload your ' + f.replace(/_/g, ' ') + ' and wait for it to finish uploading');
+                  });
                   return;
             }
 

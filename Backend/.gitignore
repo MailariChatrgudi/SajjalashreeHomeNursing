@@ -1,9 +1,14 @@
 node_modules/
 .env
+.env.development
 public/uploads/photos/*
 public/uploads/aadhar/*
+public/uploads/aadhar_front/*
+public/uploads/aadhar_back/*
 public/uploads/certificate/*
 !public/uploads/photos/.gitkeep
 !public/uploads/aadhar/.gitkeep
+!public/uploads/aadhar_front/.gitkeep
+!public/uploads/aadhar_back/.gitkeep
 !public/uploads/certificate/.gitkeep
-backup.sql
+backup.sql

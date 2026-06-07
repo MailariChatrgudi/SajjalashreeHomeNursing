@@ -69,7 +69,7 @@ const otpLimiter = rateLimit({
 });
 
 // Ensure upload directories exist (Render starts with empty filesystem)
-const uploadDirs = ['photos', 'aadhar', 'certificate'];
+const uploadDirs = ['photos', 'aadhar', 'aadhar_front', 'aadhar_back', 'certificate'];
 uploadDirs.forEach(dir => {
     const dirPath = path.join(__dirname, 'public', 'uploads', dir);
     fs.mkdirSync(dirPath, { recursive: true });
@@ -121,7 +121,7 @@ function verifyAdmin(req, res, next) {
 
 // Protected file access (no public uploads exposure)
 const UPLOADS_ROOT = path.resolve(__dirname, 'public', 'uploads');
-const ALLOWED_UPLOAD_FOLDERS = new Set(['photos', 'aadhar', 'certificate']);
+const ALLOWED_UPLOAD_FOLDERS = new Set(['photos', 'aadhar', 'aadhar_front', 'aadhar_back', 'certificate']);
 const cloudinary = require('cloudinary').v2;
 
 app.get('/admin/file/:folder/:filename', verifyAdmin, async (req, res, next) => {
@@ -489,21 +489,23 @@ const uploadToCloudinarySync = async (file) => {
     let fieldname = file.fieldname;
     if (fieldname === 'photos') fieldname = 'photo';
 
-    const folder = `sajjalashree/${fieldname}`;
+    // Environment-aware Cloudinary folder prefix
+    const folderPrefix = {
+        production:  'sajjalashree',
+        staging:     'sajjalashree_staging',
+        development: 'sajjalashree_dev'
+    }[process.env.NODE_ENV] || 'sajjalashree_dev';
 
-    // Determine extension from original filename to pass back to frontend
-    const originalExt = path.extname(file.originalname || '').toLowerCase(); // e.g. '.jpg', '.pdf'
-    
-    // Cloudinary public_id should NOT include the extension
+    const folder = `${folderPrefix}/${fieldname}`;
     const baseFilename = `${fieldname}-${Date.now()}${crypto.randomBytes(6).toString('hex')}`;
 
-    // Always upload as 'raw' regardless of mime type or field.
-    // Cloudinary only enforces 'authenticated' access control for raw resources on free tiers.
-    // Images uploaded as resource_type:'image' with type:'authenticated' may still be publicly accessible.
-    const resType = 'raw';
+    let resType = 'auto';
+    if (file.mimetype === 'application/pdf') resType = 'raw';
+    else if (file.mimetype && file.mimetype.startsWith('image/')) resType = 'image';
 
-    // All files are authenticated (private, admin-only)
-    const uploadType = 'authenticated';
+    // aadhar_front and aadhar_back are private like aadhar
+    const privateFields = ['aadhar', 'aadhar_front', 'aadhar_back'];
+    const uploadType = privateFields.includes(fieldname) ? 'authenticated' : 'upload';
 
     // Upload from buffer directly — no disk involved
     const result = await new Promise((resolve, reject) => {
@@ -513,13 +515,20 @@ const uploadToCloudinarySync = async (file) => {
                 public_id: baseFilename,
                 resource_type: resType,
                 type: uploadType,
+                ...(privateFields.includes(fieldname) && resType === 'image' && {
+                    access_control: [{
+                        access_type: 'anonymous',
+                        start: null,
+                        end: '1970-01-01'
+                    }]
+                })
             },
             (error, result) => {
                 if (error) reject(error);
                 else resolve(result);
             }
         );
-        uploadStream.end(file.buffer); // push buffer directly to Cloudinary
+        uploadStream.end(file.buffer);
     });
 
     // No fs.unlink needed — nothing was written to disk
@@ -533,40 +542,44 @@ function handleUpload(req, res, next) {
     });
 }
 
-function handleSingleUpload(req, res, next) {
-    upload.fields(CAREER_FILE_FIELDS)(req, res, (err) => {
-        if (err) return res.status(400).json({ success: false, error: 'Upload failed. Please try again.' });
-        next();
-    });
-}
-
-app.post('/upload-file', handleSingleUpload, async (req, res) => {
-    const uploadedFiles = getUploadedFiles(req.files);
-
-    if (uploadedFiles.length !== 1) {
-        return res.status(400).json({ success: false, error: 'Upload failed. Please try again.' });
-    }
-
-    const file = uploadedFiles[0];
-
+app.post('/upload-file', upload.single('file'), async (req, res, next) => {
     try {
-        const result = await uploadToCloudinarySync(file);
-        // Determine actual resource type that was used for this file
-        let resourceType = 'image';
-        if (file.mimetype === 'application/pdf') resourceType = 'raw';
-        else if (file.mimetype && file.mimetype.startsWith('image/')) resourceType = 'image';
+        const file = req.file;
+        if (!file) {
+            return res.status(400).json({
+                success: false,
+                error: 'No file provided'
+            });
+        }
 
-        return res.json({
+        // Accept all valid fieldnames including new ones
+        const validFieldnames = [
+            'photo',
+            'aadhar_front',   // new
+            'aadhar_back',    // new
+            'certificate'
+        ];
+
+        if (!validFieldnames.includes(file.fieldname)) {
+            return res.status(400).json({
+                success: false,
+                error: 'Invalid file field'
+            });
+        }
+
+        const result = await uploadToCloudinarySync(file);
+
+        return res.status(200).json({
             success: true,
             cloudinaryPublicId: result.public_id,
             url: result.secure_url,
+            resourceType: result.resource_type,
             fieldname: file.fieldname,
-            resourceType: resourceType,
             originalExt: path.extname(file.originalname || '').toLowerCase()
         });
-    } catch (uploadErr) {
-        console.error('Cloudinary upload failed in /upload-file:', uploadErr);
-        return res.status(500).json({ success: false, error: 'Upload failed. Please try again.' });
+    } catch (err) {
+        console.error('Cloudinary upload failed in /upload-file:', err);
+        next(err);
     }
 });
 
@@ -619,11 +632,16 @@ async function handleCareerApplicationApply(req, res, next) {
             experience,
             message,
             photo_public_id,
-            aadhar_public_id,
+            aadhar_front_public_id,    // new — replaces aadhar_public_id
+            aadhar_back_public_id,     // new
             certificate_public_id,
             photo_filename,
-            aadhar_filename,
-            certificate_filename
+            aadhar_front_filename,     // new
+            aadhar_back_filename,      // new
+            certificate_filename,
+            emergency_contact_name,    // new
+            emergency_contact_phone,   // new
+            emergency_contact_relation // new
         } = req.body || {};
 
         const trimmedName = typeof name === 'string' ? name.trim() : '';
@@ -641,7 +659,10 @@ async function handleCareerApplicationApply(req, res, next) {
             !trimmedExperience ||
             !trimmedMessage ||
             !photo_public_id ||
-            !aadhar_public_id
+            !aadhar_front_public_id ||  // new
+            !aadhar_back_public_id      // new
+            // certificate optional
+            // emergency contact optional
         ) {
             idempotencyStore.delete(idempotencyKey);
             return res.status(400).json({
@@ -668,22 +689,27 @@ async function handleCareerApplicationApply(req, res, next) {
             return verifyCloudinary(public_id, 'image');
         };
 
-        const [photoExists, aadharExists, certExists] = await Promise.all([
-            verifyAnyType(photo_public_id),
-            verifyAnyType(aadhar_public_id),
-            certificate_public_id ? verifyAnyType(certificate_public_id) : Promise.resolve(true)
-        ]);
+        const [photoExists, aadharFrontExists, aadharBackExists, certExists] =
+            await Promise.all([
+                verifyAnyType(photo_public_id),
+                verifyAnyType(aadhar_front_public_id),
+                verifyAnyType(aadhar_back_public_id),
+                certificate_public_id
+                    ? verifyAnyType(certificate_public_id)
+                    : Promise.resolve(true)
+            ]);
 
-        if (!photoExists || !aadharExists || !certExists) {
+        if (!photoExists || !aadharFrontExists || !aadharBackExists) {
             idempotencyStore.delete(idempotencyKey);
             return res.status(422).json({
                 success: false,
                 error: 'One or more files are missing. Please re-upload.',
                 phase: 'verify',
                 missing: {
-                    photo: !photoExists,
-                    aadhar: !aadharExists,
-                    certificate: !certExists
+                    photo:        !photoExists,
+                    aadhar_front: !aadharFrontExists,
+                    aadhar_back:  !aadharBackExists,
+                    certificate:  !certExists
                 }
             });
         }
@@ -708,23 +734,49 @@ async function handleCareerApplicationApply(req, res, next) {
         try {
             await connection.beginTransaction();
 
-            const safePhotoFilename = sanitizeUploadedFilename(photo_filename || getFilenameFromPublicId(photo_public_id));
-            const safeAadharFilename = sanitizeUploadedFilename(aadhar_filename || getFilenameFromPublicId(aadhar_public_id));
-            const safeCertificateFilename = sanitizeUploadedFilename(certificate_filename || getFilenameFromPublicId(certificate_public_id));
+            const safeAadharFrontFilename = sanitizeUploadedFilename(
+                aadhar_front_filename || getFilenameFromPublicId(aadhar_front_public_id)
+            );
+            const safeAadharBackFilename = sanitizeUploadedFilename(
+                aadhar_back_filename || getFilenameFromPublicId(aadhar_back_public_id)
+            );
+            const safeCertificateFilename = sanitizeUploadedFilename(
+                certificate_filename || getFilenameFromPublicId(certificate_public_id)
+            );
+            const safePhotoFilename = sanitizeUploadedFilename(
+                photo_filename || getFilenameFromPublicId(photo_public_id)
+            );
+
+            // Trim emergency contact fields safely
+            const trimmedEmergencyName     = typeof emergency_contact_name === 'string'
+                ? emergency_contact_name.trim() : null;
+            const trimmedEmergencyPhone    = typeof emergency_contact_phone === 'string'
+                ? emergency_contact_phone.trim() : null;
+            const trimmedEmergencyRelation = typeof emergency_contact_relation === 'string'
+                ? emergency_contact_relation.trim() : null;
 
             const [result] = await connection.execute(
                 `INSERT INTO career_applications
-                  (full_name, email, phone, aadhar_card, photo, message, experience_years, certificate)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                    (full_name, email, phone,
+                     aadhar_front, aadhar_back,
+                     photo, message, experience_years, certificate,
+                     emergency_contact_name,
+                     emergency_contact_phone,
+                     emergency_contact_relation)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     trimmedName,
                     trimmedEmail,
                     trimmedPhone,
-                    safeAadharFilename,
+                    safeAadharFrontFilename,
+                    safeAadharBackFilename,
                     safePhotoFilename,
                     trimmedMessage,
                     trimmedExperience,
-                    safeCertificateFilename
+                    safeCertificateFilename || null,
+                    trimmedEmergencyName    || null,
+                    trimmedEmergencyPhone   || null,
+                    trimmedEmergencyRelation || null
                 ]
             );
 
@@ -735,7 +787,8 @@ async function handleCareerApplicationApply(req, res, next) {
 
             await rollbackCloudinaryUploads([
                 { id: photo_public_id },
-                { id: aadhar_public_id },
+                { id: aadhar_front_public_id },
+                { id: aadhar_back_public_id },
                 { id: certificate_public_id }
             ]);
 
@@ -747,7 +800,8 @@ async function handleCareerApplicationApply(req, res, next) {
                 experience: trimmedExperience,
                 message: trimmedMessage,
                 photo_public_id,
-                aadhar_public_id,
+                aadhar_front_public_id,
+                aadhar_back_public_id,
                 certificate_public_id
             }));
 
