@@ -376,31 +376,37 @@
                     </button>
                 </div>
 
-                <div class="table-wrap hidden" id="tableWrap">
-                    <!--
-          data-label attributes on <td> are used by the CSS mobile
-          card-table to render pseudo-element labels on small screens.
-        -->
-                    <table class="app-table" id="appTable" role="grid">
+                <div class="table-wrap hidden" id="tableWrap" style="width: 100%; flex: 1;">
+                    <!-- Desktop table (hidden on mobile via CSS) -->
+                    <div class="desktop-table-container">
+                    <table class="app-table" id="appTable" role="grid" style="min-width: 900px; table-layout: fixed; width: 100%;">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Applicant</th>
-                                <th scope="col">Phone</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Exp.</th>
-                                <th scope="col">Photo</th>
-                                <th scope="col">Aadhaar</th>
-                                <th scope="col">Certificate</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Actions</th>
+                                <th scope="col" style="width: 40px; text-align: center;">#</th>
+                                <th scope="col" style="width: 160px;">Applicant</th>
+                                <th scope="col" style="width: 120px;">Phone</th>
+                                <th scope="col" style="width: 180px;">Email</th>
+                                <th scope="col" style="width: 60px; text-align: center;">Exp.</th>
+                                <th scope="col" style="width: 70px; text-align: center;">Photo</th>
+                                <th scope="col" style="width: 90px; text-align: center;">Aadhaar Front</th>
+                                <th scope="col" style="width: 90px; text-align: center;">Aadhaar Back</th>
+                                <th scope="col" style="width: 90px; text-align: center;">Certificate</th>
+                                <th scope="col" style="width: 100px; text-align: center;">Status</th>
+                                <th scope="col" style="width: 120px; text-align: center;">Date</th>
+                                <th scope="col" style="width: 90px; text-align: center;">Actions</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
                             <!-- Rows injected by admin.js -->
                         </tbody>
                     </table>
+                    </div><!-- end desktop table container -->
+
+                    <!-- Mobile card layout (visible only on mobile/tablet) -->
+                    <div id="mobile-cards-container" class="mobile-cards-container hidden">
+                      <!-- Cards rendered by admin.js using existing loadedApplications data -->
+                    </div>
+
                 </div>
 
             </div>

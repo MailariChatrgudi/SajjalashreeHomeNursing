@@ -1,5 +1,7 @@
 const { Resend } = require('resend');
-require('dotenv').config();
+const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.development';
+require('dotenv').config({ path: require('path').resolve(__dirname, '../', envFile) });
+
 
 // Create resend instance only if key exists to prevent startup crash on Render
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;

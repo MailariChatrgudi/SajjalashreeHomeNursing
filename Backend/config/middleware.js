@@ -3,7 +3,9 @@ const path = require('path')
 const crypto = require('crypto')
 
 const cloudinary = require('cloudinary').v2;
-require('dotenv').config();
+const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.development';
+require('dotenv').config({ path: require('path').resolve(__dirname, '../', envFile) });
+
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
-require("dotenv").config();
+const envFile = process.env.NODE_ENV === 'production' ? '.env' : '.env.development';
+require('dotenv').config({ path: require('path').resolve(__dirname, '../', envFile) });
+
 // Secret key for JWT - Store in .env in production
 const JWT_SECRET = process.env.JWT_SECRET;
 

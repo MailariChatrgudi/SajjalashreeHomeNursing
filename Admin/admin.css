@@ -425,6 +425,7 @@ img {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    width: 100vw;
 }
 
 @media (min-width: 1024px) {
@@ -1596,6 +1597,7 @@ img {
         transform: translateY(14px);
         opacity: 0;
     }
+
     to {
         transform: translateY(0);
         opacity: 1;
@@ -1607,6 +1609,7 @@ img {
     place-items: center;
     padding: 15px;
 }
+
 #imgModal .modal-panel {
     border-radius: var(--r-lg);
     max-width: 700px;
@@ -1616,8 +1619,10 @@ img {
     max-height: 95vh;
     animation: slideUpCentered .22s var(--ease);
 }
+
 #imgModal .modal-panel::before {
-    display: none; /* Hide drag pill on mobile */
+    display: none;
+    /* Hide drag pill on mobile */
 }
 
 /* Desktop: centred modal */
@@ -2031,4 +2036,72 @@ input {
 /* Accent stripe alias for shortlisted (HTML uses .stat-shortlisted) */
 .stat-shortlisted::before {
     background: var(--band-short);
+}
+
+/* ── 20. RESPONSIVE TABLE FIXES & MOBILE CARDS ──────────────── */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .admin-table-email {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
+  .admin-table-phone {
+    font-size: 11px;
+  }
+}
+
+/* Base truncation for email always */
+.admin-table-email {
+    display: block;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Mobile card styles */
+.app-card {
+  padding: 16px;
+  background: white;
+  transition: background 0.15s;
+}
+.app-card:hover {
+  background: #f8fafc;
+}
+.app-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.app-card-docs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.app-card-doc-thumb {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  object-fit: cover;
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+}
+
+/* Hidden utilities to support the user's mobile card JS */
+@media (max-width: 1023px) {
+  .desktop-table-container {
+    display: none !important;
+  }
+  .mobile-cards-container {
+    display: block !important;
+  }
+}
+@media (min-width: 1024px) {
+  .mobile-cards-container {
+    display: none !important;
+  }
 }

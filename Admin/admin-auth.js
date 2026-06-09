@@ -646,9 +646,12 @@ async function handleForgotPasswordSubmit(event) {
         const data = await response.json();
 
         if (response.ok) {
-            showSuccessMessage(data.message || 'Reset code sent!');
             resetFlowState.username = username;
-            setTimeout(() => switchView('otpView'), 1000);
+            // Switch immediately — server already responded (email is sending in bg)
+            switchView('otpView');
+            // Show helpful notice so user knows email may take a moment
+            _showOtpNotice();
+            _startResendCountdown(username);
         } else {
             showError('resetUsernameError', data.message || 'Failed to send reset code');
         }
@@ -660,6 +663,75 @@ async function handleForgotPasswordSubmit(event) {
         submitBtn.innerHTML = originalText;
     }
 }
+
+/** Show info notice on OTP view */
+function _showOtpNotice() {
+    const container = document.getElementById('otpView');
+    if (!container) return;
+    let notice = document.getElementById('_otpDelayNotice');
+    if (!notice) {
+        notice = document.createElement('p');
+        notice.id = '_otpDelayNotice';
+        notice.style.cssText = 'font-size:13px;color:#6b7280;text-align:center;margin:8px 0 4px;line-height:1.5;';
+        // Insert before the first form element
+        const form = container.querySelector('form') || container;
+        form.insertAdjacentElement('beforebegin', notice);
+    }
+    notice.innerHTML = '📧 A 6-digit code has been sent to your email.<br><span style="color:#9ca3af;font-size:12px;">It may take up to 1–2 minutes to arrive. Check your spam folder too.</span>';
+}
+
+/** 60-second resend countdown */
+let _resendTimer = null;
+function _startResendCountdown(username) {
+    // Clear any existing timer
+    if (_resendTimer) { clearInterval(_resendTimer); _resendTimer = null; }
+
+    let container = document.getElementById('otpView');
+    if (!container) return;
+
+    // Create or reuse resend button row
+    let resendRow = document.getElementById('_resendRow');
+    if (!resendRow) {
+        resendRow = document.createElement('div');
+        resendRow.id = '_resendRow';
+        resendRow.style.cssText = 'text-align:center;margin:12px 0 4px;';
+        const form = container.querySelector('form');
+        if (form) form.insertAdjacentElement('afterend', resendRow);
+        else container.appendChild(resendRow);
+    }
+
+    let seconds = 60;
+    resendRow.innerHTML = `<span id="_resendCountdown" style="font-size:13px;color:#9ca3af;">Resend code in <b>${seconds}s</b></span>`;
+
+    _resendTimer = setInterval(() => {
+        seconds--;
+        const el = document.getElementById('_resendCountdown');
+        if (seconds > 0) {
+            if (el) el.innerHTML = `Resend code in <b>${seconds}s</b>`;
+        } else {
+            clearInterval(_resendTimer);
+            _resendTimer = null;
+            if (resendRow) {
+                resendRow.innerHTML = '<button type="button" id="_resendBtn" style="background:none;border:none;color:#4f46e5;font-size:13px;cursor:pointer;text-decoration:underline;padding:0;">↺ Resend code</button>';
+                const btn = document.getElementById('_resendBtn');
+                if (btn) btn.addEventListener('click', async () => {
+                    btn.textContent = 'Sending…';
+                    btn.disabled = true;
+                    try {
+                        await fetch(`${AUTH_API_BASE}/admin/forgot-password`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ username })
+                        });
+                    } catch (_) {}
+                    _startResendCountdown(username);
+                });
+            }
+        }
+    }, 1000);
+}
+
+
 
 async function handleOtpSubmit(event) {
     event.preventDefault();

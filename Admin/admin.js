@@ -537,6 +537,7 @@ function renderTable(apps) {
     // Support new aadhar_front column with fallback to legacy aadhar_card
     const aadharFrontFile = app.aadhar_front || app.aadhar_card || null;
     const certFile        = app.certificate || null;
+    const aadharBackFile  = app.aadhar_back || null;
     const initials        = getInitials(app.full_name);
     const aadharFrontType = aadharFrontFile ? aadharFrontFile.split('.').pop().toLowerCase() : '';
 
@@ -561,7 +562,7 @@ function renderTable(apps) {
       </td>
 
       <td data-label="Email" style="font-size:.82rem;">
-        <a href="mailto:${escHtml(app.email || '')}" style="color:var(--accent);">${escHtml(app.email || '—')}</a>
+        <a href="mailto:${escHtml(app.email || '')}" style="color:var(--accent);" class="admin-table-email" title="${escHtml(app.email || '')}">${escHtml(app.email || '—')}</a>
       </td>
 
       <td data-label="Experience">
@@ -573,13 +574,20 @@ function renderTable(apps) {
 
       <td data-label="Photo">${thumbCellProtected(FILES.photos, photoFile, 'Photo', `previewProtectedImg('${FILES.photos}','${escHtml(photoFile || '')}','Photo — ${escHtml(app.full_name || '')}')`, 'fa-image')}</td>
 
-      <td data-label="Aadhaar">${thumbCellProtected(
+      <td data-label="Aadhaar Front">${thumbCellProtected(
         app.aadhar_front ? FILES.aadhar_front : FILES.aadhar,
         aadharFrontFile,
         'Aadhaar Front',
-        `previewProtectedImg('${app.aadhar_front ? FILES.aadhar_front : FILES.aadhar}','${escHtml(aadharFrontFile || '')}','Aadhaar — ${escHtml(app.full_name || '')}')`,
+        `previewProtectedImg('${app.aadhar_front ? FILES.aadhar_front : FILES.aadhar}','${escHtml(aadharFrontFile || '')}','Aadhaar Front — ${escHtml(app.full_name || '')}')`,
         'fa-id-card'
       )}</td>
+
+      <td data-label="Aadhaar Back">${aadharBackFile
+        ? thumbCellProtected(FILES.aadhar_back, aadharBackFile, 'Aadhaar Back',
+            `previewProtectedImg('${FILES.aadhar_back}','${escHtml(aadharBackFile)}','Aadhaar Back — ${escHtml(app.full_name || '')}')`,
+            'fa-id-card')
+        : `<span class="no-file"><i class="fa-solid fa-file-slash"></i> N/A</span>`
+      }</td>
 
       <td data-label="Certificate">${certFile
         ? thumbCellProtected(FILES.certificate, certFile, 'Certificate',
@@ -622,6 +630,9 @@ function renderTable(apps) {
   showTableState('table');
   updateResultCount(apps.length);
   hydrateProtectedThumbs(tbody);
+  
+  // Render mobile cards alongside table
+  renderMobileCards(apps);
 }
 
 /** Build a thumbnail cell */
@@ -1063,6 +1074,115 @@ function toggleSidebar() {
   const overlay = document.getElementById('sidebarOverlay');
   sidebar?.classList.toggle('open');
   overlay?.classList.toggle('show');
+}
+
+function clearUserSession() {
+  localStorage.removeItem('adminToken');
+  sessionStorage.removeItem('adminToken');
+}
+
+// Render mobile card view alongside table
+// Uses already-loaded applications data
+// No new API calls
+
+function renderMobileCards(applications) {
+  const container = document.getElementById('mobile-cards-container');
+  if (!container) return;
+
+  container.innerHTML = applications.map((app, index) => `
+    <div class="app-card">
+      
+      <!-- Card Header -->
+      <div class="app-card-header">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:40px; height:40px; border-radius:50%; background:#e0e7ff; color:#4338ca; font-weight:bold; font-size:14px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            ${(app.full_name || 'U').split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase()}
+          </div>
+          <div>
+            <h4 style="font-weight:bold; color:#0f172a; font-size:14px; margin:0; line-height:1.2;">
+              ${app.full_name}
+            </h4>
+            <p style="font-size:11px; color:#94a3b8; margin:0;">
+              #${app.id} · ${app.experience_years || 0} yrs exp
+            </p>
+          </div>
+        </div>
+        
+        <!-- Status badge -->
+        <span class="status-badge ${normalizeStatus(app.status).toLowerCase()}">
+          ${statusDot(normalizeStatus(app.status))} ${normalizeStatus(app.status)}
+        </span>
+      </div>
+
+      <!-- Contact info -->
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:12px;">
+        <div style="background:#f8fafc; border-radius:8px; padding:8px 12px;">
+          <p style="font-size:9px; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; font-weight:bold; margin:0 0 2px 0;">Phone</p>
+          <p style="font-size:12px; font-weight:600; color:#334155; margin:0; font-family:monospace;">${app.phone || '—'}</p>
+        </div>
+        <div style="background:#f8fafc; border-radius:8px; padding:8px 12px; overflow:hidden;">
+          <p style="font-size:9px; color:#94a3b8; text-transform:uppercase; letter-spacing:1px; font-weight:bold; margin:0 0 2px 0;">Email</p>
+          <p style="font-size:12px; font-weight:600; color:#334155; margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${app.email || '—'}</p>
+        </div>
+      </div>
+
+      <!-- Document thumbnails -->
+      <div class="app-card-docs">
+        ${renderCardDocThumb(app, FILES.photos, app.photo, 'Photo')}
+        ${renderCardDocThumb(app, app.aadhar_front ? FILES.aadhar_front : FILES.aadhar, app.aadhar_front || app.aadhar_card, 'Front')}
+        ${renderCardDocThumb(app, FILES.aadhar_back, app.aadhar_back, 'Back')}
+        ${renderCardDocThumb(app, FILES.certificate, app.certificate, 'Cert')}
+      </div>
+
+      <!-- Action buttons -->
+      <div style="display:flex; align-items:center; gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid #f1f5f9;">
+        <button 
+          onclick="openViewModal('${app.id}')"
+          style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:8px; background:#eef2ff; color:#4338ca; border-radius:8px; font-size:12px; font-weight:600; border:1px solid #e0e7ff; cursor:pointer;">
+          <i class="fa-solid fa-eye"></i> View
+        </button>
+        <button 
+          onclick="confirmDelete('${app.id}')"
+          style="padding:8px 12px; background:#fef2f2; color:#ef4444; border-radius:8px; border:1px solid #fee2e2; cursor:pointer;">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
+
+    </div>
+  `).join('');
+  
+  // Hydrate images in mobile cards too
+  hydrateProtectedThumbs(container);
+}
+
+function renderCardDocThumb(app, folder, filename, label) {
+  if (!filename) {
+    return `
+      <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+        <div style="width:100%; aspect-ratio:1; border-radius:8px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; border:1px solid #e2e8f0;">
+          <i class="fa-solid fa-image" style="color:#cbd5e1; font-size:18px;"></i>
+        </div>
+        <span style="font-size:9px; color:#cbd5e1; font-weight:500;">${label}</span>
+      </div>
+    `;
+  }
+  const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
+  return `
+    <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+      <div 
+        style="width:100%; aspect-ratio:1; border-radius:8px; overflow:hidden; border:1px solid #e2e8f0; cursor:pointer;"
+        onclick="previewProtectedImg('${folder}','${escHtml(filename)}','${label} \u2014 ${escHtml(app.full_name || '')}')"
+      >
+        <img 
+          src="${placeholder}"
+          data-file-folder="${escHtml(folder)}"
+          data-file-name="${escHtml(filename)}"
+          style="width:100%; height:100%; object-fit:cover;"
+        >
+      </div>
+      <span style="font-size:9px; color:#64748b; font-weight:500;">${label}</span>
+    </div>
+  `;
 }
 
 function closeSidebar() {

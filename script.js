@@ -445,6 +445,13 @@ document.addEventListener('DOMContentLoaded', function () {
       async function eagerUploadFile(inputEl, fieldname) {
             var file = inputEl.files[0];
             if (!file) return;
+
+            console.log('=== eagerUploadFile ===');
+            console.log('Fieldname:', fieldname);
+            console.log('File name:', file.name);
+            console.log('File type:', file.type);
+            console.log('File size:', file.size);
+
             setFileStatus(fieldname, 'uploading');
             careerUploadedIds[fieldname] = null;
             careerUploadedTypes[fieldname] = null;
@@ -452,9 +459,18 @@ document.addEventListener('DOMContentLoaded', function () {
             updateCareerSubmitButton();
             try {
                   var fd = new FormData();
+                  // CRITICAL: append with actual fieldname, NOT 'file'
                   fd.append(fieldname, file, file.name);
+
+                  console.log('FormData fieldname used:', fieldname);
+                  console.log('Sending to:', `${API_BASE}/upload-file`);
+
                   var res = await fetch(`${API_BASE}/upload-file`, { method: 'POST', body: fd });
+
+                  console.log('Upload response status:', res.status);
                   var data = await res.json();
+                  console.log('Upload response data:', data);
+
                   if (data.success && data.cloudinaryPublicId) {
                         careerUploadedIds[fieldname] = data.cloudinaryPublicId;
                         careerUploadedTypes[fieldname] = data.resourceType || 'raw';
@@ -465,16 +481,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         careerUploadedTypes[fieldname] = null;
                         careerUploadedFilenames[fieldname] = null;
                         setFileStatus(fieldname, 'failed');
+                        showError(errorId[fieldname], data.error || 'Upload failed. Please try again.');
                   }
             } catch (e) {
+                  console.error('Upload fetch error:', e);
                   careerUploadedIds[fieldname] = null;
                   careerUploadedTypes[fieldname] = null;
                   careerUploadedFilenames[fieldname] = null;
                   setFileStatus(fieldname, 'failed');
+                  showError(errorId[fieldname], e.name === 'AbortError' ? 'Upload timed out. Please try again.' : 'Upload failed. Please try again.');
             } finally {
                   updateCareerSubmitButton();
             }
       }
+
 
       function handleChangeFile(fieldname) {
             // Save previous public ID in case user cancels

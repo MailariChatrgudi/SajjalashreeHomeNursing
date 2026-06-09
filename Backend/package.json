@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "node --dns-result-order=ipv4first server.js"
+    "start": "node server.js"
   },
   "engines": {
     "node": ">=18.0.0"
