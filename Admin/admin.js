@@ -597,9 +597,17 @@ function renderTable(apps) {
       }</td>
 
       <td data-label="Status">
-        <span class="status-badge ${status.toLowerCase()}" id="badge-${id}">
-          ${statusDot(status)} ${status}
-        </span>
+        <div style="display:flex; flex-direction:column; gap:6px; align-items:center;">
+          <span class="status-badge ${status.toLowerCase()}" id="badge-${id}" style="width:100%; box-sizing:border-box;">
+            ${statusDot(status)} ${status}
+          </span>
+          <select class="status-select" data-id="${id}" onchange="updateStatus(this)" title="Update status" style="width:100%; margin:0; height:28px; padding:2px 6px; font-size:0.7rem;">
+            <option value="" disabled selected>Update…</option>
+            <option value="Pending">Pending</option>
+            <option value="Shortlisted">Shortlisted</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
       </td>
 
       <td data-label="Date">${app.created_at ? new Date(app.created_at).toLocaleString('en-IN') : '—'}</td>
@@ -609,13 +617,6 @@ function renderTable(apps) {
           <button class="btn-row view" title="View details" aria-label="View applicant details" onclick="openViewModal('${id}')">
             <i class="fa-solid fa-eye"></i>
           </button>
-
-          <select class="status-select" data-id="${id}" onchange="updateStatus(this)" title="Update status">
-            <option value="" disabled selected>Update…</option>
-            <option value="Pending">Pending</option>
-            <option value="Shortlisted">Shortlisted</option>
-            <option value="Rejected">Rejected</option>
-          </select>
 
           <button class="btn-row del" title="Delete application" onclick="confirmDelete('${id}')">
             <i class="fa-solid fa-trash-can"></i>
@@ -1158,6 +1159,12 @@ function renderMobileCards(applications) {
           style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:8px; background:#eef2ff; color:#4338ca; border-radius:8px; font-size:12px; font-weight:600; border:1px solid #e0e7ff; cursor:pointer;">
           <i class="fa-solid fa-eye"></i> View
         </button>
+        <select class="status-select" data-id="${app.id}" onchange="updateStatus(this)" title="Update status" style="flex:1; height:35px; border-radius:8px; border:1px solid #e2e8f0; font-size:12px; background:#f8fafc; color:#334155; padding:0 8px;">
+          <option value="" disabled selected>Update Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Shortlisted">Shortlisted</option>
+          <option value="Rejected">Rejected</option>
+        </select>
         <button 
           onclick="confirmDelete('${app.id}')"
           style="padding:8px 12px; background:#fef2f2; color:#ef4444; border-radius:8px; border:1px solid #fee2e2; cursor:pointer;">

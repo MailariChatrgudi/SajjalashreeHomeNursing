@@ -629,7 +629,8 @@ img {
 
 @media (min-width: 1280px) {
     .stats-grid {
-        grid-template-columns: repeat(4, minmax(0, 50px)); justify-content: start;
+        grid-template-columns: repeat(4, minmax(0, 50px));
+        justify-content: start;
         gap: 20px;
     }
 }
@@ -1338,6 +1339,7 @@ img {
     font-weight: 600;
     border: 1px solid transparent;
     white-space: nowrap;
+    overflow: hidden;
 }
 
 .status-badge.pending {
@@ -2040,16 +2042,17 @@ input {
 
 /* ── 20. RESPONSIVE TABLE FIXES & MOBILE CARDS ──────────────── */
 @media (min-width: 1024px) and (max-width: 1280px) {
-  .admin-table-email {
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    display: block;
-  }
-  .admin-table-phone {
-    font-size: 11px;
-  }
+    .admin-table-email {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: block;
+    }
+
+    .admin-table-phone {
+        font-size: 11px;
+    }
 }
 
 /* Base truncation for email always */
@@ -2063,49 +2066,62 @@ input {
 
 /* Mobile card styles */
 .app-card {
-  padding: 16px;
-  background: white;
-  transition: background 0.15s;
+    padding: 16px;
+    background: white;
+    transition: background 0.15s;
 }
+
 .app-card:hover {
-  background: #f8fafc;
+    background: #f8fafc;
 }
+
 .app-card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
 }
+
 .app-card-docs {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 50px)); justify-content: start;
-  gap: 8px;
-  margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 50px));
+    justify-content: start;
+    gap: 8px;
+    margin-top: 12px;
 }
+
 .app-card-doc-thumb {
-  aspect-ratio: 1;
-  border-radius: 8px;
-  object-fit: cover;
-  width: 100%;
-  cursor: pointer;
-  border: 1px solid #e2e8f0;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    object-fit: cover;
+    width: 100%;
+    cursor: pointer;
+    border: 1px solid #e2e8f0;
 }
 
 /* Hidden utilities to support the user's mobile card JS */
 @media (max-width: 1023px) {
-  .desktop-table-container {
-    display: none !important;
-  }
-  .mobile-cards-container {
-    display: block !important;
-  }
+    .desktop-table-container {
+        display: none !important;
+    }
+
+    .mobile-cards-container {
+        display: block !important;
+    }
 }
+
 @media (min-width: 1024px) {
-  .mobile-cards-container {
-    display: none !important;
-  }
+    .mobile-cards-container {
+        display: none !important;
+    }
 }
- 
- . a p p - t a b l e   t h ,   . a p p - t a b l e   t d   {   w h i t e - s p a c e :   n o w r a p ;   o v e r f l o w :   h i d d e n ;   t e x t - o v e r f l o w :   e l l i p s i s ;   } 
- 
- 
+
+   . a p p - t a b l e   t h ,
+   . a p p - t a b l e   t d    {
+       w h i t e - s p a c e :    n o w r a p ;
+       o v e r f l o w :    h i d d e n ;
+       t e x t - o v e r f l o w :    e l l i p s i s ;
+       
+}
+
+     
