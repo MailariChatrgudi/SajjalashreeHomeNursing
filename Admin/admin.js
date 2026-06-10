@@ -652,6 +652,16 @@ function thumbCell(src, label, onclickCode, fallbackIcon) {
 
 function thumbCellProtected(folder, filename, label, onclickCode, fallbackIcon) {
   if (!filename) return `<span class="no-file"><i class="fa-solid ${fallbackIcon}"></i> N/A</span>`;
+
+  if (filename.toLowerCase().endsWith('.pdf')) {
+    return `
+      <div class="pdf-thumb" onclick="openProtectedPdfViewer('${folder}','${escHtml(filename)}','${escHtml(label)}')">
+        <i class="fa-solid fa-file-pdf" style="font-size:24px; color:#ef4444; cursor:pointer;"></i>
+        <span style="font-size:10px; display:block; margin-top:4px; color:var(--txt-2);">PDF</span>
+      </div>
+    `;
+  }
+
   // Use a harmless placeholder to avoid immediate `src=""` load/error before hydration.
   const placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
   return `
@@ -953,6 +963,12 @@ function openViewModal(id) {
       ${certFile ? `
       <div class="detail-field">
         <span class="detail-label">Certificate</span>
+        ${certFile.toLowerCase().endsWith('.pdf') ? `
+        <div onclick="openProtectedPdfViewer('${FILES.certificate}','${escHtml(certFile)}','Certificate \u2014 ${escHtml(app.full_name || '')}')" style="cursor:pointer; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:120px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px;">
+          <i class="fa-solid fa-file-pdf" style="font-size:32px; color:#ef4444;"></i>
+          <span style="font-size:12px; margin-top:8px; color:var(--txt-2);">View PDF</span>
+        </div>
+        ` : `
         <img
           class="detail-img"
           src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
@@ -962,6 +978,7 @@ function openViewModal(id) {
           onclick="previewProtectedImg('${FILES.certificate}','${escHtml(certFile)}','Certificate \u2014 ${escHtml(app.full_name || '')}')"
           onerror="this.outerHTML='<p style=color:var(--txt-3)>Not available</p>'"
         />
+        `}
       </div>` : ''}
 
       ${app.emergency_contact_name ? `
