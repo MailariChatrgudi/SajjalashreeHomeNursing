@@ -97,7 +97,9 @@ app.use(cors({
     ? [
         process.env.FRONTEND_URL, 
         'https://sajjalashreehomenursingservices.com', 
-        'https://www.sajjalashreehomenursingservices.com'
+        'https://www.sajjalashreehomenursingservices.com',
+        'https://sajjalashreehomenursing.onrender.com',
+        'https://sajjalashreehomenursing-1.onrender.com'
       ].filter(Boolean)
     : true,                       // development: allow all (localhost)
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

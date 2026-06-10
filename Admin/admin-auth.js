@@ -830,3 +830,4 @@ async function handleResetPasswordSubmit(event) {
         submitBtn.innerHTML = originalText;
     }
 }
+

@@ -1,8 +1,6 @@
 
 // Auto-detect backend URL: localhost in dev, Render in production
-const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-      ? 'http://localhost:3000'
-      : window.location.origin;
+let API_BASE; if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') { API_BASE = 'http://localhost:3000'; } else if (window.location.hostname.includes('sajjalashreehomenursingservices.com')) { API_BASE = 'https://sajjalashreehomenursing.onrender.com'; } else { API_BASE = window.location.origin; }
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -54,22 +52,22 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       const fileValidator = {
-            photo:        { types: ["image/jpeg", "image/png"] },
+            photo: { types: ["image/jpeg", "image/png"] },
             aadhar_front: { types: ["image/jpeg", "image/png"] }, // new
-            aadhar_back:  { types: ["image/jpeg", "image/png"] }, // new
-            certificate:  { types: ["image/jpeg", "image/png"] }  // PDF removed
+            aadhar_back: { types: ["image/jpeg", "image/png"] }, // new
+            certificate: { types: ["image/jpeg", "image/png"] }  // PDF removed
       }
 
       const errorId = {
-            name:         'nameErorrMsg',
-            phone:        'phoneErorrMsg',
-            email:        'emailErorrMsg',
-            experience:   'expErorrMsg',
-            message:      'msgErorrMsg',
-            photo:        'PhotoErorrMsg',
+            name: 'nameErorrMsg',
+            phone: 'phoneErorrMsg',
+            email: 'emailErorrMsg',
+            experience: 'expErorrMsg',
+            message: 'msgErorrMsg',
+            photo: 'PhotoErorrMsg',
             aadhar_front: 'aadharFrontErorrMsg', // new
-            aadhar_back:  'aadharBackErorrMsg',  // new
-            certificate:  'cetificateErorrMsg',
+            aadhar_back: 'aadharBackErorrMsg',  // new
+            certificate: 'cetificateErorrMsg',
             emergency_contact_name: 'emergencyNameErorrMsg',
             emergency_contact_phone: 'emergencyPhoneErorrMsg',
             emergency_contact_relation: 'emergencyRelationErorrMsg',
@@ -298,30 +296,30 @@ document.addEventListener('DOMContentLoaded', function () {
                   // ── Reset all file inputs ──
                   document.getElementById('resume').value = '';
                   document.getElementById('career-aadhar-front').value = '';
-                  document.getElementById('career-aadhar-back').value  = '';
+                  document.getElementById('career-aadhar-back').value = '';
                   document.getElementById('career-certificate').value = '';
-                  document.getElementById('emergency-contact-name').value     = '';
-                  document.getElementById('emergency-contact-phone').value    = '';
+                  document.getElementById('emergency-contact-name').value = '';
+                  document.getElementById('emergency-contact-phone').value = '';
                   document.getElementById('emergency-contact-relation').value = '';
 
                   // ── Reset uploaded IDs and types ──
                   careerUploadedIds.photo = null;
                   careerUploadedIds.aadhar_front = null;
-                  careerUploadedIds.aadhar_back  = null;
+                  careerUploadedIds.aadhar_back = null;
                   careerUploadedIds.certificate = null;
                   careerUploadedTypes.photo = null;
                   careerUploadedTypes.aadhar_front = null;
-                  careerUploadedTypes.aadhar_back  = null;
+                  careerUploadedTypes.aadhar_back = null;
                   careerUploadedTypes.certificate = null;
                   careerUploadedFilenames.photo = null;
                   careerUploadedFilenames.aadhar_front = null;
-                  careerUploadedFilenames.aadhar_back  = null;
+                  careerUploadedFilenames.aadhar_back = null;
                   careerUploadedFilenames.certificate = null;
 
                   // ── Reset all file status indicators to idle ──
                   setFileStatus('photo', 'idle');
                   setFileStatus('aadhar_front', 'idle');
-                  setFileStatus('aadhar_back',  'idle');
+                  setFileStatus('aadhar_back', 'idle');
                   setFileStatus('certificate', 'idle');
 
                   // ── Uncheck consent checkbox ──
@@ -381,17 +379,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Map: fieldname -> status indicator element ID
       var fileStatusIds = {
-            photo:        'uploadStatus_photo',
+            photo: 'uploadStatus_photo',
             aadhar_front: 'aadharFrontStatus',
-            aadhar_back:  'aadharBackStatus',
-            certificate:  'uploadStatus_certificate',
+            aadhar_back: 'aadharBackStatus',
+            certificate: 'uploadStatus_certificate',
       };
       // Map: input element ID -> fieldname
       var inputFieldMap = {
-            resume:            'photo',
+            resume: 'photo',
             'career-aadhar-front': 'aadhar_front',
-            'career-aadhar-back':  'aadhar_back',
-            'career-certificate':  'certificate',
+            'career-aadhar-back': 'aadhar_back',
+            'career-certificate': 'certificate',
       };
 
       // Create or get the status <p> element below each file input
@@ -404,10 +402,10 @@ document.addEventListener('DOMContentLoaded', function () {
                   el.style.cssText = 'font-size:12px; margin-top:4px; margin-bottom:0;';
                   // Insert after the error message paragraph for this field
                   var errorElId = {
-                        photo:        'PhotoErorrMsg',
+                        photo: 'PhotoErorrMsg',
                         aadhar_front: 'aadharFrontErorrMsg',
-                        aadhar_back:  'aadharBackErorrMsg',
-                        certificate:  'cetificateErorrMsg'
+                        aadhar_back: 'aadharBackErorrMsg',
+                        certificate: 'cetificateErorrMsg'
                   }[fieldname];
                   var errEl = document.getElementById(errorElId);
                   if (errEl && errEl.parentNode) errEl.parentNode.insertBefore(el, errEl.nextSibling);
@@ -527,10 +525,10 @@ document.addEventListener('DOMContentLoaded', function () {
             updateCareerSubmitButton();
             // Find and reset the input
             var inputId = {
-                  photo:        'resume',
+                  photo: 'resume',
                   aadhar_front: 'career-aadhar-front',
-                  aadhar_back:  'career-aadhar-back',
-                  certificate:  'career-certificate'
+                  aadhar_back: 'career-aadhar-back',
+                  certificate: 'career-certificate'
             }[fieldname];
             var inputEl = document.getElementById(inputId);
             if (!inputEl) return;
@@ -583,21 +581,21 @@ document.addEventListener('DOMContentLoaded', function () {
                   phone: formVals.phone,
                   experience: formVals.experience,
                   message: formVals.message,
-                  photo_public_id:        careerUploadedIds.photo,
+                  photo_public_id: careerUploadedIds.photo,
                   aadhar_front_public_id: careerUploadedIds.aadhar_front,  // new
-                  aadhar_back_public_id:  careerUploadedIds.aadhar_back,   // new
-                  certificate_public_id:  careerUploadedIds.certificate,
-                  photo_resource_type:        careerUploadedTypes.photo || 'image',
+                  aadhar_back_public_id: careerUploadedIds.aadhar_back,   // new
+                  certificate_public_id: careerUploadedIds.certificate,
+                  photo_resource_type: careerUploadedTypes.photo || 'image',
                   aadhar_front_resource_type: careerUploadedTypes.aadhar_front || 'image',
-                  aadhar_back_resource_type:  careerUploadedTypes.aadhar_back  || 'image',
-                  certificate_resource_type:  careerUploadedTypes.certificate  || 'image',
-                  photo_filename:        careerUploadedFilenames.photo,
+                  aadhar_back_resource_type: careerUploadedTypes.aadhar_back || 'image',
+                  certificate_resource_type: careerUploadedTypes.certificate || 'image',
+                  photo_filename: careerUploadedFilenames.photo,
                   aadhar_front_filename: careerUploadedFilenames.aadhar_front, // new
-                  aadhar_back_filename:  careerUploadedFilenames.aadhar_back,  // new
-                  certificate_filename:  careerUploadedFilenames.certificate,
+                  aadhar_back_filename: careerUploadedFilenames.aadhar_back,  // new
+                  certificate_filename: careerUploadedFilenames.certificate,
                   // Emergency contact (optional)
-                  emergency_contact_name:     document.getElementById('emergency-contact-name')?.value.trim() || null,
-                  emergency_contact_phone:    document.getElementById('emergency-contact-phone')?.value.trim() || null,
+                  emergency_contact_name: document.getElementById('emergency-contact-name')?.value.trim() || null,
+                  emergency_contact_phone: document.getElementById('emergency-contact-phone')?.value.trim() || null,
                   emergency_contact_relation: document.getElementById('emergency-contact-relation')?.value || null,
             };
 
@@ -632,10 +630,10 @@ document.addEventListener('DOMContentLoaded', function () {
                               closeCareerModal();
                               careerForm.style.display = '';
                               showToast('Some files could not be verified. Please re-upload the highlighted files.', 'error');
-                              if (data.missing.photo)        { showError(errorId.photo,        'Please re-upload your photo');         careerUploadedIds.photo = null;        setFileStatus('photo', 'idle'); }
-                              if (data.missing.aadhar_front) { showError(errorId.aadhar_front,  'Aadhaar front missing — please re-upload'); careerUploadedIds.aadhar_front = null; setFileStatus('aadhar_front', 'idle'); }
-                              if (data.missing.aadhar_back)  { showError(errorId.aadhar_back,   'Aadhaar back missing — please re-upload');  careerUploadedIds.aadhar_back  = null; setFileStatus('aadhar_back', 'idle'); }
-                              if (data.missing.certificate)  { showError(errorId.certificate,   'Please re-upload your certificate');   careerUploadedIds.certificate = null; setFileStatus('certificate', 'idle'); }
+                              if (data.missing.photo) { showError(errorId.photo, 'Please re-upload your photo'); careerUploadedIds.photo = null; setFileStatus('photo', 'idle'); }
+                              if (data.missing.aadhar_front) { showError(errorId.aadhar_front, 'Aadhaar front missing — please re-upload'); careerUploadedIds.aadhar_front = null; setFileStatus('aadhar_front', 'idle'); }
+                              if (data.missing.aadhar_back) { showError(errorId.aadhar_back, 'Aadhaar back missing — please re-upload'); careerUploadedIds.aadhar_back = null; setFileStatus('aadhar_back', 'idle'); }
+                              if (data.missing.certificate) { showError(errorId.certificate, 'Please re-upload your certificate'); careerUploadedIds.certificate = null; setFileStatus('certificate', 'idle'); }
                               updateCareerSubmitButton();
                               return;
                         }
@@ -709,14 +707,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Validate that all required files were eagerly uploaded
             const missingFiles = [];
-            if (!careerUploadedIds.photo)        missingFiles.push('photo');
+            if (!careerUploadedIds.photo) missingFiles.push('photo');
             if (!careerUploadedIds.aadhar_front) missingFiles.push('aadhar_front'); // new
-            if (!careerUploadedIds.aadhar_back)  missingFiles.push('aadhar_back');  // new
+            if (!careerUploadedIds.aadhar_back) missingFiles.push('aadhar_back');  // new
 
             if (missingFiles.length > 0) {
                   btn.disabled = false;
                   btn.innerHTML = originalBtnHTML;
-                  missingFiles.forEach(function(f) {
+                  missingFiles.forEach(function (f) {
                         showError(errorId[f], '*Please upload your ' + f.replace(/_/g, ' ') + ' and wait for it to finish uploading');
                   });
                   return;
@@ -907,3 +905,4 @@ document.addEventListener('DOMContentLoaded', function () {
             });
       }
 });
+
