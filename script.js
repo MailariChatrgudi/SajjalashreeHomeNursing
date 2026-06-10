@@ -36,6 +36,9 @@ document.addEventListener('DOMContentLoaded', function () {
                   return (isNaN(exp) || exp < 0 || exp > 50) ? '*Please enter valid experience (0–50 years)' : '';
             },
             message: (value) => !value.trim() ? '*Message cannot be empty' : '',
+            emergency_contact_name: (value) => value.length < 3 ? '*Name must be at least 3 characters' : '',
+            emergency_contact_phone: (value) => (!value || !/^\+?[\d\s\-().]{7,15}$/.test(value.trim())) ? '*Phone must be 10 digits' : '',
+            emergency_contact_relation: (value) => !value.trim() ? '*Relation cannot be empty' : '',
       }
 
       const showError = (erorrId, message) => {
@@ -62,6 +65,9 @@ document.addEventListener('DOMContentLoaded', function () {
             aadhar_front: 'aadharFrontErorrMsg', // new
             aadhar_back:  'aadharBackErorrMsg',  // new
             certificate:  'cetificateErorrMsg',
+            emergency_contact_name: 'emergencyNameErorrMsg',
+            emergency_contact_phone: 'emergencyPhoneErorrMsg',
+            emergency_contact_relation: 'emergencyRelationErorrMsg',
       }
       const formInputValidation = (input) => {
             const inputType = input.name
@@ -94,11 +100,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
       }
-      const fieldEvents = {
-            name: 'input', phone: 'input', email: 'blur',
-            experience: 'blur', message: 'blur',
-            photo: 'change', aadhar_front: 'change', aadhar_back: 'change', certificate: 'change',
-      };
+      // Attach live validation events to text inputs
+      const textFieldsToValidate = [
+            'name', 'phone', 'email', 'experience', 'message',
+            'emergency-contact-name', 'emergency-contact-phone', 'emergency-contact-relation'
+      ];
+      textFieldsToValidate.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                  el.addEventListener('input', () => formInputValidation(el));
+                  el.addEventListener('blur', () => formInputValidation(el));
+            }
+      });
 
       const setupCharCounter = (inputId, counterId, max = 500) => {
             const input = document.getElementById(inputId);
@@ -661,7 +674,10 @@ document.addEventListener('DOMContentLoaded', function () {
             var originalBtnHTML = btn.innerHTML;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Submitting...';
 
-            var fields = ['name', 'phone', 'email', 'experience', 'message'];
+            var fields = [
+                  'name', 'phone', 'email', 'experience', 'message',
+                  'emergency-contact-name', 'emergency-contact-phone', 'emergency-contact-relation'
+            ];
             var isFormValid = true;
 
             fields.forEach(function (id) {
