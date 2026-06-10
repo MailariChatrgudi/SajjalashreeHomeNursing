@@ -2,7 +2,7 @@
 // Auto-detect backend URL: localhost in dev, Render in production
 const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
       ? 'http://localhost:3000'
-      : 'https://sajjalashreehomenursing.onrender.com';
+      : window.location.origin;
 
 document.addEventListener('DOMContentLoaded', function () {
 
