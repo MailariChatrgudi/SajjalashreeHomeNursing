@@ -629,7 +629,7 @@ img {
 
 @media (min-width: 1280px) {
     .stats-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(4, minmax(0, 50px)); justify-content: start;
         gap: 20px;
     }
 }
@@ -2078,7 +2078,7 @@ input {
 }
 .app-card-docs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 50px)); justify-content: start;
   gap: 8px;
   margin-top: 12px;
 }
@@ -2104,6 +2104,8 @@ input {
   .mobile-cards-container {
     display: none !important;
   }
-} 
- . a p p - t a b l e   t h ,   . a p p - t a b l e   t d   {   w h i t e - s p a c e :   n o w r a p ;   o v e r f l o w :   h i d d e n ;   t e x t - o v e r f l o w :   e l l i p s i s ;   }  
+}
+ 
+ . a p p - t a b l e   t h ,   . a p p - t a b l e   t d   {   w h i t e - s p a c e :   n o w r a p ;   o v e r f l o w :   h i d d e n ;   t e x t - o v e r f l o w :   e l l i p s i s ;   } 
+ 
  
