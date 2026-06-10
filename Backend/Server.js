@@ -531,13 +531,7 @@ const uploadToCloudinarySync = async (file) => {
                 folder,
                 public_id: baseFilename,
                 resource_type: resType,
-                type: uploadType,
-                ...(resType === 'image' && {
-                    access_control: [{
-                        access_type: 'anonymous',
-                        end: '1970-01-01'
-                    }]
-                })
+                type: uploadType
             },
             (error, result) => {
                 if (error) {
