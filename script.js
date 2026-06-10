@@ -37,7 +37,12 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             message: (value) => !value.trim() ? '*Message cannot be empty' : '',
             emergency_contact_name: (value) => value.length < 3 ? '*Name must be at least 3 characters' : '',
-            emergency_contact_phone: (value) => (!value || !/^\+?[\d\s\-().]{7,15}$/.test(value.trim())) ? '*Phone must be 10 digits' : '',
+            emergency_contact_phone: (value) => {
+                  if (!value || !/^\+?[\d\s\-().]{7,15}$/.test(value.trim())) return '*Phone must be 10 digits';
+                  const mainPhone = document.getElementById('phone')?.value.trim();
+                  if (mainPhone && value.trim() === mainPhone) return '*Contact Person Mobile Number must not be equal to your phone number';
+                  return '';
+            },
             emergency_contact_relation: (value) => !value.trim() ? '*Relation cannot be empty' : '',
       }
 
