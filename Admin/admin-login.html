@@ -182,6 +182,11 @@
 
     <script src="admin-auth.js"></script>
     <script>
+        // If user is already logged in, redirect them to dashboard immediately
+        if (typeof isUserAuthenticated === 'function' && isUserAuthenticated()) {
+            window.location.replace('dashboard.html');
+        }
+
         document.getElementById('loginForm').addEventListener('submit', handleLoginSubmit);
         document.getElementById('forgotPasswordForm').addEventListener('submit', handleForgotPasswordSubmit);
         document.getElementById('otpForm').addEventListener('submit', handleOtpSubmit);

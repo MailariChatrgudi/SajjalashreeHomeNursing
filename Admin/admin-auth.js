@@ -246,8 +246,7 @@ async function handleLoginSubmit(event) {
 
             showSuccessMessage('Login successful! Redirecting...');
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
-
+                window.location.replace('dashboard.html');
             }, 1500);
         } else {
             // Login failed
