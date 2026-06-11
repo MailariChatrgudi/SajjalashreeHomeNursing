@@ -155,92 +155,51 @@ app.get('/admin/file/:folder/:filename', verifyAdmin, async (req, res, next) => 
             development: 'sajjalashree_dev'
         }[process.env.NODE_ENV] || 'sajjalashree_dev';
 
-        const ext = path.extname(filename).toLowerCase();
-        const format = ext ? ext.replace('.', '') : '';
-        const baseFilename = filename.split('.')[0];
-        // Try env-prefixed path first, fallback to bare 'sajjalashree' for old records
-        const public_id_new = `${folderPrefix}/${fieldname}/${baseFilename}`;
-        const public_id_old = `sajjalashree/${fieldname}/${baseFilename}`;
-        const public_id = public_id_new; // primary; fallback handled below
-        const isPdf = format === 'pdf';
+        // Determine if this folder contains private files
+        const privateFolders = new Set([
+          'aadhar',
+          'aadhar_front',
+          'aadhar_back'
+        ]);
+        const isPrivate = privateFolders.has(folder);
 
-        // 1) Try local file first
-        const allowedDir = path.resolve(UPLOADS_ROOT, folder);
-        const filePath = path.resolve(allowedDir, filename);
-        try {
-            await fs.promises.access(filePath, fs.constants.R_OK);
-            if (isPdf) {
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-            }
-            return res.sendFile(filePath);
-        } catch {
-            // Local file not found, try Cloudinary
+        // Extract base filename without extension
+        const baseFilename = filename.includes('.')
+          ? filename.substring(0, filename.lastIndexOf('.'))
+          : filename;
+
+        const publicId = `${folderPrefix}/${fieldname}/${baseFilename}`;
+
+        console.log(`Admin file request: ${publicId} private: ${isPrivate}`);
+
+        // Generate appropriate URL
+        let fileUrl;
+
+        if (isPrivate) {
+          // Signed URL — expires in 5 minutes
+          fileUrl = cloudinary.url(publicId, {
+            resource_type: 'image',
+            type:          'authenticated',
+            sign_url:      true,
+            expires_at:    Math.floor(Date.now() / 1000) + 300,
+            secure:        true
+          });
+        } else {
+          // Public URL — no signing needed
+          fileUrl = cloudinary.url(publicId, {
+            resource_type: 'image',
+            type:          'upload',
+            secure:        true
+          });
         }
 
-        const expiresAt = Math.floor(Date.now() / 1000) + 300; // 5 min expiry
+        console.log(`Generated URL for ${folder}/${filename}: ${isPrivate ? 'signed' : 'public'}`);
 
-        const getClient = (url) => url.startsWith('http://') ? require('http') : require('https');
-
-        const streamFromUrl = (url, cb) => {
-            getClient(url).get(url, (cloudinaryRes) => {
-                // Follow one redirect
-                if (cloudinaryRes.statusCode >= 300 && cloudinaryRes.statusCode < 400 && cloudinaryRes.headers.location) {
-                    getClient(cloudinaryRes.headers.location).get(cloudinaryRes.headers.location, (rr) => {
-                        cb(rr.statusCode === 200 ? rr : null);
-                    }).on('error', () => cb(null));
-                    return;
-                }
-                cb(cloudinaryRes.statusCode === 200 ? cloudinaryRes : null);
-            }).on('error', () => cb(null));
-        };
-
-        const makeSignedUrl = (pid, resType, uploadType) =>
-            cloudinary.utils.private_download_url(pid, format, {
-                resource_type: resType,
-                type: uploadType,
-                expires_at: expiresAt
-            });
-
-        // Build a priority list of signed URLs to try:
-        // 1. New env-prefixed path as authenticated image
-        // 2. Old bare 'sajjalashree/' path as authenticated image  (legacy records)
-        // 3. New env-prefixed path as public upload image           (certificate images)
-        // 4. Old bare path as public upload image                   (legacy cert)
-        // 5. Raw authenticated (legacy PDF)
-        const urlsToTry = [
-            makeSignedUrl(public_id_new, 'image', 'authenticated'),
-            makeSignedUrl(public_id_old, 'image', 'authenticated'),
-            makeSignedUrl(public_id_new, 'image', 'upload'),
-            makeSignedUrl(public_id_old, 'image', 'upload'),
-            makeSignedUrl(public_id_new, 'raw',   'authenticated'),
-            makeSignedUrl(public_id_old, 'raw',   'authenticated'),
-        ];
-        if (isPdf) {
-            urlsToTry.push(
-                cloudinary.utils.private_download_url(`${public_id_new}.${format}`, null, { resource_type: 'raw', type: 'authenticated', expires_at: expiresAt }),
-                cloudinary.utils.private_download_url(`${public_id_old}.${format}`, null, { resource_type: 'raw', type: 'authenticated', expires_at: expiresAt })
-            );
-        }
-
-        const tryNext = (index = 0) => {
-            if (index >= urlsToTry.length) {
-                console.warn(`File not found in Cloudinary: ${folder}/${filename}`);
-                return res.status(404).json({ success: false, message: 'File not found' });
-            }
-            streamFromUrl(urlsToTry[index], (stream) => {
-                if (stream) {
-                    const typeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', pdf: 'application/pdf' };
-                    const ct = typeMap[format] || stream.headers['content-type'];
-                    if (ct) res.setHeader('Content-Type', ct);
-                    if (isPdf) res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
-                    return stream.pipe(res);
-                }
-                tryNext(index + 1);
-            });
-        };
-
-        tryNext();
+        // Redirect directly to the Cloudinary URL.
+        // fetch() in admin.js will transparently follow this redirect
+        // and receive the image/pdf blob, maintaining exactly the same behavior 
+        // without breaking the frontend blob loading logic.
+        return res.redirect(fileUrl);
 
     } catch (e) {
         next(e);
@@ -486,68 +445,71 @@ const sanitizeUploadedFilename = (filename) => {
 const getUploadedFiles = (files) => Object.values(files || {}).flat().filter(Boolean);
 
 const uploadToCloudinarySync = async (file) => {
-    if (!file) return null;
+  if (!file) return null;
 
-    console.log('=== uploadToCloudinarySync ===');
+  let fieldname = file.fieldname;
+  if (fieldname === 'photos') fieldname = 'photo';
 
-    let fieldname = file.fieldname;
-    if (fieldname === 'photos') fieldname = 'photo';
+  const folderPrefix = {
+    production:  'sajjalashree',
+    staging:     'sajjalashree_staging',
+    development: 'sajjalashree_dev'
+  }[process.env.NODE_ENV] || 'sajjalashree_dev';
 
-    // Environment-aware Cloudinary folder prefix
-    const folderPrefix = {
-        production:  'sajjalashree',
-        staging:     'sajjalashree_staging',
-        development: 'sajjalashree_dev'
-    }[process.env.NODE_ENV] || 'sajjalashree_dev';
+  const folder = `${folderPrefix}/${fieldname}`;
+  const baseFilename = `${fieldname}-${Date.now()}${crypto.randomBytes(6).toString('hex')}`;
 
-    const folder = `${folderPrefix}/${fieldname}`;
-    const baseFilename = `${fieldname}-${Date.now()}${crypto.randomBytes(6).toString('hex')}`;
+  let resType = 'auto';
+  if (file.mimetype === 'application/pdf') resType = 'raw';
+  else if (file.mimetype && file.mimetype.startsWith('image/')) resType = 'image';
 
-    console.log('Folder:', folder);
-    console.log('Public ID:', baseFilename);
-    console.log('Mimetype:', file.mimetype);
-    console.log('Buffer length:', file.buffer?.length);
+  // PRIVATE fields — Aadhaar only
+  // Photo and certificate are public
+  const privateFields = ['aadhar', 'aadhar_front', 'aadhar_back'];
+  const isPrivate = privateFields.includes(fieldname);
+  const uploadType = isPrivate ? 'authenticated' : 'upload';
 
-    let resType = 'auto';
-    if (file.mimetype === 'application/pdf') resType = 'raw';
-    else if (file.mimetype && file.mimetype.startsWith('image/')) resType = 'image';
+  console.log(`Uploading ${fieldname} as type: ${uploadType}`);
 
-    // All fields are private (authenticated) in Cloudinary
-    const privateFields = ['photo', 'aadhar', 'aadhar_front', 'aadhar_back', 'certificate'];
-    const uploadType = privateFields.includes(fieldname) ? 'authenticated' : 'upload';
+  const result = await new Promise((resolve, reject) => {
+    const uploadOptions = {
+      folder,
+      public_id:     baseFilename,
+      resource_type: resType,
+      type:          uploadType
+    };
 
-    console.log('Resource type:', resType);
-    console.log('Upload type:', uploadType);
+    // For authenticated image uploads — set expired access control
+    if (isPrivate && resType === 'image') {
+      uploadOptions.access_control = [{
+        access_type: 'anonymous',
+        start:       null,
+        end:         '1970-01-01'
+      }];
+    }
 
-    // Upload from buffer directly — no disk involved
-    const result = await new Promise((resolve, reject) => {
-        if (!file.buffer || file.buffer.length === 0) {
-            console.error('Buffer is empty or undefined');
-            reject(new Error('File buffer is empty'));
-            return;
+    const uploadStream = cloudinary.uploader.upload_stream(
+      uploadOptions,
+      (error, result) => {
+        if (error) {
+          console.error(`Cloudinary upload error for ${fieldname}:`, error);
+          reject(error);
+        } else {
+          console.log(`Cloudinary upload success: ${result.public_id} type: ${result.type}`);
+          resolve(result);
         }
-        const uploadStream = cloudinary.uploader.upload_stream(
-            {
-                folder,
-                public_id: baseFilename,
-                resource_type: resType,
-                type: uploadType
-            },
-            (error, result) => {
-                if (error) {
-                    console.error('Cloudinary stream error:', error);
-                    reject(error);
-                } else {
-                    console.log('Cloudinary upload success:', result.public_id);
-                    resolve(result);
-                }
-            }
-        );
-        uploadStream.end(file.buffer);
-    });
+      }
+    );
 
-    // No fs.unlink needed — nothing was written to disk
-    return result;
+    if (!file.buffer || file.buffer.length === 0) {
+      reject(new Error('File buffer is empty'));
+      return;
+    }
+
+    uploadStream.end(file.buffer);
+  });
+
+  return result;
 };
 
 function handleUpload(req, res, next) {
@@ -712,30 +674,37 @@ async function handleCareerApplicationApply(req, res, next) {
             });
         }
 
-        const verifyCloudinary = async (public_id, resource_type = 'auto', type = 'authenticated') => {
-            try {
-                console.log(`Verifying Cloudinary: ${public_id} [${resource_type}/${type}]`);
-                await cloudinary.api.resource(public_id, { resource_type, type });
-                console.log('Verification passed:', public_id);
-                return true;
-            } catch (e) {
-                console.log(`Verification failed: ${public_id} [${resource_type}/${type}]`, e.message);
-                return false;
-            }
+        const verifyCloudinaryFile = async (publicId, resourceType, uploadType) => {
+          if (!publicId) return false;
+          try {
+            await cloudinary.api.resource(publicId, {
+              resource_type: resourceType || 'image',
+              type:          uploadType   || 'upload'
+            });
+            console.log(`Verified: ${publicId}`);
+            return true;
+          } catch (e) {
+            console.log(`Verify failed: ${publicId} — ${e.message}`);
+            return false;
+          }
         };
 
-        // Check authenticated image first (covers photo, aadhar_front, aadhar_back),
-        // then public upload image (covers certificate images),
-        // then authenticated raw (legacy PDF certificates)
-        const verifyAnyType = async (public_id) => {
-            if (!public_id) return false;
-            // 1. Authenticated image (aadhar_front, aadhar_back, photo)
-            if (await verifyCloudinary(public_id, 'image', 'authenticated')) return true;
-            // 2. Public upload image (certificate images)
-            if (await verifyCloudinary(public_id, 'image', 'upload')) return true;
-            // 3. Authenticated raw (legacy PDF certificates)
-            if (await verifyCloudinary(public_id, 'raw', 'authenticated')) return true;
-            return false;
+        const verifyAnyType = async (publicId) => {
+          if (!publicId) return false;
+
+          // Try authenticated (Aadhaar)
+          if (await verifyCloudinaryFile(publicId, 'image', 'authenticated')) return true;
+
+          // Try public upload (photo, certificate)
+          if (await verifyCloudinaryFile(publicId, 'image', 'upload')) return true;
+
+          // Try raw authenticated (old PDF certificates)
+          if (await verifyCloudinaryFile(publicId, 'raw', 'authenticated')) return true;
+
+          // Try raw upload
+          if (await verifyCloudinaryFile(publicId, 'raw', 'upload')) return true;
+
+          return false;
         };
 
         const [photoExists, aadharFrontExists, aadharBackExists, certExists] =
