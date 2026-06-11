@@ -1,6 +1,7 @@
-
 // Auto-detect backend URL: localhost in dev, Render in production
-let API_BASE; if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') { API_BASE = 'http://localhost:3000'; } else if (window.location.hostname.includes('sajjalashreehomenursingservices.com')) { API_BASE = 'https://sajjalashreehomenursing.onrender.com'; } else { API_BASE = window.location.origin; }
+const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000'
+      : 'https://sajjalashreehomenursing.onrender.com';
 
 document.addEventListener('DOMContentLoaded', function () {
 

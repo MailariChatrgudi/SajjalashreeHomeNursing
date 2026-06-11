@@ -29,7 +29,7 @@
 // Auto-detect backend: localhost in dev, Render in production
 const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
   ? 'http://localhost:3000'
-  : window.location.origin;
+  : 'https://sajjalashreehomenursing.onrender.com';
 
 const API = {
   applications: `${API_BASE}/admin/applications`,
