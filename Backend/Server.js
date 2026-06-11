@@ -483,7 +483,6 @@ const uploadToCloudinarySync = async (file) => {
     if (isPrivate && resType === 'image') {
       uploadOptions.access_control = [{
         access_type: 'anonymous',
-        start:       null,
         end:         '1970-01-01'
       }];
     }
