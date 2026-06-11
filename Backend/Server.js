@@ -155,13 +155,8 @@ app.get('/admin/file/:folder/:filename', verifyAdmin, async (req, res, next) => 
             development: 'sajjalashree_dev'
         }[process.env.NODE_ENV] || 'sajjalashree_dev';
 
-        // Determine if this folder contains private files
-        const privateFolders = new Set([
-          'aadhar',
-          'aadhar_front',
-          'aadhar_back'
-        ]);
-        const isPrivate = privateFolders.has(folder);
+        // All files are strictly private/authenticated now
+        const isPrivate = true;
 
         // Extract base filename without extension
         const baseFilename = filename.includes('.')
@@ -463,11 +458,9 @@ const uploadToCloudinarySync = async (file) => {
   if (file.mimetype === 'application/pdf') resType = 'raw';
   else if (file.mimetype && file.mimetype.startsWith('image/')) resType = 'image';
 
-  // PRIVATE fields — Aadhaar only
-  // Photo and certificate are public
-  const privateFields = ['aadhar', 'aadhar_front', 'aadhar_back'];
-  const isPrivate = privateFields.includes(fieldname);
-  const uploadType = isPrivate ? 'authenticated' : 'upload';
+  // All files are strictly private/authenticated now
+  const isPrivate = true;
+  const uploadType = 'authenticated';
 
   console.log(`Uploading ${fieldname} as type: ${uploadType}`);
 
